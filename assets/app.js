@@ -90,28 +90,113 @@
   }
 
   /* ---------------------------------------------------------
-     Révélations au scroll : tout ce qui garde un état de départ
-     et qui n'appartient pas à l'intro.
+     Révélations au scroll
+     Durées et courbes reprises des interactions d'origine.
      --------------------------------------------------------- */
+
+  // Le grand titre : ses lettres remontent l'une après l'autre.
+  function revealLetters(wrap, entering) {
+    var letters = $$('.interaction-letter-2', wrap);
+    var span = $('.text-span-80', wrap) || $('.text-span-80');
+    animate(wrap, { opacity: entering ? '1' : '0' }, { duration: 500, easing: 'ease' });
+    letters.forEach(function (l, i) {
+      animate(l, {
+        transform: entering ? 'translateY(0%)' : 'translateY(100%)',
+        opacity: entering ? '1' : '0'
+      }, { duration: 750, delay: i * 50, easing: 'outQuart' });
+    });
+    if (span) {
+      animate(span, { opacity: entering ? '1' : '0' },
+        entering ? { duration: 600, delay: 600, easing: 'ease' } : { duration: 500, delay: 400 });
+    }
+  }
+
+  var REVEALS = [
+    { trigger: '.content-heading-wrapper', replay: true, run: revealLetters },
+    { trigger: '.faqs_item', replay: false, run: function (item) {
+        animate(item, { transform: 'translateX(0%)' }, { duration: 1500, easing: 'outQuart' });
+        var top = $('.faqs_item-top', item);
+        if (top) animate(top, { opacity: '1' }, { duration: 1500, easing: 'ease' });
+      } },
+    { trigger: '.history-item', replay: false, run: function (item) {
+        animate(item, { opacity: '1', transform: 'translateY(0px)' }, { duration: 1000, easing: 'outQuart' });
+      } }
+  ];
+
   function scrollReveals() {
+    var handled = [];
+
+    REVEALS.forEach(function (spec) {
+      $$(spec.trigger).forEach(function (el) {
+        handled.push(el);
+        $$('*', el).forEach(function (c) { handled.push(c); });
+        if (reduce || !('IntersectionObserver' in window)) { spec.run(el, true); return; }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            spec.run(e.target, e.isIntersecting);
+            if (e.isIntersecting && !spec.replay) io.unobserve(e.target);
+          });
+        }, { threshold: 0.1 });
+        io.observe(el);
+      });
+    });
+
+    // Le reste des éléments encore figés sur leur état de départ.
     var heroSel = HERO.map(function (g) { return g.sel; }).join(', ') + ', .tut-parent, .tut-parent-phone, ' + FROZEN;
     var pending = $$('[style*="translate3d"], [style*="opacity"]').filter(function (el) {
-      return !el.matches(heroSel);
+      return !el.matches(heroSel) && handled.indexOf(el) === -1;
     });
     if (!pending.length) return;
-
     if (reduce || !('IntersectionObserver' in window)) {
       pending.forEach(function (el) { settle(el, { duration: 0 }); });
       return;
     }
-    var io = new IntersectionObserver(function (entries) {
+    var io2 = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        settle(entry.target, { duration: 1000, easing: 'outQuad' });
-        io.unobserve(entry.target);
+        settle(entry.target, { duration: 1000, easing: 'outQuart' });
+        io2.unobserve(entry.target);
       });
     }, { threshold: 0.2 });
-    pending.forEach(function (el) { io.observe(el); });
+    pending.forEach(function (el) { io2.observe(el); });
+  }
+
+  /* ---------------------------------------------------------
+     Parallaxes pilotées par la progression du scroll
+     La valeur suit la traversée de l'écran par l'élément, entre
+     deux images-clés — pas une transition minutée.
+     --------------------------------------------------------- */
+  var PARALLAX = [
+    { sel: '.ecran-site-accueil', axis: 'Y', from: 120, to: -50, unit: 'px', k0: 0, k1: 70 },
+    { sel: '.image-43', axis: 'Y', from: 0, to: -88, unit: '%', k0: 50, k1: 65 },
+    { sel: '.gallery-track', axis: 'X', from: 0, to: -16, unit: 'vh', k0: 0, k1: 100 }
+  ];
+
+  function parallax() {
+    if (reduce) return;
+    var items = [];
+    PARALLAX.forEach(function (p) {
+      $$(p.sel).forEach(function (el) { items.push({ el: el, p: p }); });
+    });
+    if (!items.length) return;
+
+    function tick() {
+      var vh = window.innerHeight;
+      items.forEach(function (it) {
+        var r = it.el.getBoundingClientRect();
+        // 0 % : l'élément entre par le bas ; 100 % : il sort par le haut.
+        var prog = (vh - r.top) / (vh + r.height) * 100;
+        var p = it.p;
+        var t = (prog - p.k0) / (p.k1 - p.k0);
+        t = Math.max(0, Math.min(1, t));
+        var v = p.from + (p.to - p.from) * t;
+        it.el.style.transition = 'none';
+        it.el.style.transform = 'translate' + p.axis + '(' + v.toFixed(2) + p.unit + ')';
+      });
+    }
+    tick();
+    addEventListener('scroll', tick, { passive: true });
+    addEventListener('resize', tick);
   }
 
   /* ---------------------------------------------------------
@@ -260,6 +345,7 @@
     cardHovers();
     cursor();
     scrollReveals();
+    parallax();
     intro();
     document.body.classList.add('is-ready');
   }

@@ -136,9 +136,14 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
 - Le relevé exhaustif des 21 pages est fait **à 1440 px** ; les quatre autres largeurs ont
   été contrôlées sur un échantillon de 5 pages couvrant chaque famille (accueil, rubrique,
   page projet, galerie).
-- **Révélations au scroll** : le bas de page apparaît en 1 s à l'entrée dans le viewport.
-  Aucune interaction d'origine ne cible ces éléments par identifiant : la durée est une
-  approximation raisonnable, pas une valeur relevée.
+- **Révélations au scroll** : reprises des interactions d'origine, avec leurs durées et
+  leurs courbes — les lettres du grand titre remontent en cascade (750 ms `outQuart`,
+  50 ms d'écart entre chacune) et repartent quand la section quitte l'écran ; les blocs de
+  la FAQ glissent depuis la gauche (−101 %, 1500 ms `outQuart`).
+- **Parallaxes liées au scroll** : trois effets suivent la progression de l'élément à
+  travers l'écran, et non une durée — l'écran d'accueil (120 → −50 px sur 0–70 % de la
+  traversée), la maquette de `loransse-doe` (0 → −88 % entre 50 et 65 %) et son triptyque
+  de téléphones (0 → −16 vh sur toute la traversée).
 - **Scroll inertiel (luxy.js)** : repris. La bibliothèque d'origine (luxy.js v0.1.0, MIT,
   Mineo Okuda) est embarquée en local plutôt qu'appelée sur un CDN, et initialisée avec les
   mêmes réglages (`wrapperSpeed: 0.065`, désactivé sur mobile). Comme sur le site d'origine,
