@@ -69,19 +69,29 @@ Animations reprises : fondu enchaîné des 4 photos (1 s de fondu, 3,875 s par i
 dissout, logo qui monte (`fade-up`, 1 s) et flèche qui glisse depuis la gauche
 (`fade-right`, 1,125 s) après 625 ms, zoom `scale(1.06)` au survol.
 
-**Toutes les pages** — chaque page a été comparée au live à 1440 px : position et taille de
-chaque élément dans l'ordre du document, hauteur totale de page, largeur de scroll.
-Résultat identique caractère pour caractère sur les pages vérifiées (accueil, photo, web,
-infos, une page projet, une galerie) :
+**Les 21 pages** ont été comparées au site en ligne à 1440 px, images chargées : hauteur
+totale de page et mise en page de chaque élément (`offsetLeft/Top/Width/Height`, insensible
+aux transforms et donc aux animations en cours).
 
-| Page | Hauteur | Verdict |
-|---|---|---|
-| `accueil/` | 4320 | identique |
-| `photo/` | 4603 | identique |
-| `web/` | 900 | identique |
-| `infos/` | 3048 | identique |
-| `websites/kioskup/` | 4231 | identique |
-| `projets-photo/nature/` | 3970 | identique (68 images) |
+**Les 21 hauteurs sont identiques.**
+
+| Page | Hauteur | | Page | Hauteur |
+|---|---|---|---|---|
+| `accueil/` | 4320 | | `projets-photo/kioskup/` | 8957 |
+| `photo/` | 4603 | | `projets-photo/noir-et-blanc/` | 8400 |
+| `web/` | 900 | | `projets-photo/nature/` | 6895 |
+| `infos/` | 3048 | | `projets-photo/reciproque/` | 9596 |
+| `websites/ambassadeurs/` | 4922 | | `projets-photo/en-couleur/` | 8677 |
+| `websites/casa-linear/` | 4922 | | `projets-photo/musique/` | 6453 |
+| `websites/celie-yoga/` | 4922 | | `projets-photo/calais/` | 6184 |
+| `websites/kioskup/` | 4922 | | `projets-photo/ambiance/` | 5911 |
+| `websites/loransse-doe/` | 4102 | | `projets-photo/galerie/` | 4634 |
+| | | | `projets-photo/la-saison-des-chants/` | 4499 |
+| | | | `projets-photo/manif/` | 4594 |
+| | | | `projets-photo/studio/` | 2772 |
+
+Le décompte d'éléments diffère de ±1 : ce sont les classes-marqueurs posées par les runtimes
+(`w-mod-js` côté Webflow, `is-ready` côté réplique). Aucun écart de mise en page.
 
 Trois comportements non évidents, découverts en comparant et reproduits tels quels :
 
@@ -102,15 +112,17 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
   réellement, plus un `@font-face` local pour *Unigeo 64 Variable Trial* (la police de tout
   le site, graisses 100–820).
 - **JS** : interactions réécrites à la main d'après les données du moteur d'origine, avec
-  ses durées et ses courbes. Le HTML porte déjà, élément par élément, l'état de départ de
+  ses durées et ses courbes. Deux modules font exception — la **visionneuse** des galeries
+  et le **carrousel** des pages projet : le runtime Webflow d'origine est rejoué tel quel,
+  en local, sur les seules pages concernées. Sans `data-wf-page`, son moteur d'animations
+  reste inerte et n'entre pas en conflit avec `app.js`. Le HTML porte déjà, élément par élément, l'état de départ de
   chaque animation en style inline — ce que Webflow grave pour éviter un flash au
   chargement. `app.js` s'appuie dessus et ramène chaque élément à son état final.
 
 ## Limites connues
 
 - Le relevé est fait **à 1440 px**. Les autres largeurs n'ont pas été comparées élément par
-  élément. Six des 21 pages ont été comparées au live ; les 15 autres sortent du même
-  pipeline, mais n'ont pas été relevées une à une.
+  élément.
 - **Révélations au scroll** : le bas de page apparaît en 1 s à l'entrée dans le viewport.
   Aucune interaction d'origine ne cible ces éléments par identifiant : la durée est une
   approximation raisonnable, pas une valeur relevée.
@@ -127,8 +139,9 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
 - Deux images (`arrow.svg`, `MacBook.png`) empruntées par les pages projet à d'autres sites
   Webflow renvoient un 403 : elles sont **déjà cassées sur le site d'origine**, et le sont
   donc ici aussi. Leur URL est laissée telle quelle.
-- Une partie des photos vit sur un second site (`magalicontrinophotographie.webflow.io`),
-  vers lequel le mégamenu pointe encore.
+- Le mégamenu pointe encore vers `magalicontrinophotographie.webflow.io` (« Photographie
+  pro » / « Photographie perso ») : ce second site **n'existe plus** — toutes ses URL
+  renvoient un 404. Les liens sont déjà morts sur le site d'origine.
 - Page d'entrée : son favicon, son apple-touch-icon et son image de partage sont référencés
   par le site d'origine mais renvoient un 404 — références retirées plutôt que reproduites.
   Le portfolio, lui, a bien son favicon : il est repris et servi en local.
