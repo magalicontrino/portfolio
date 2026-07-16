@@ -324,6 +324,31 @@
   }
 
   /* ---------------------------------------------------------
+     Titres des rubriques : la graisse s'épaissit au chargement
+     Unigeo est une police variable (100–820) : le titre part en
+     maigre et prend du corps. C'est l'effet le plus visible de ces
+     pages, et il n'était pas repris.
+     --------------------------------------------------------- */
+  var TITRES = [
+    { sel: '.text-block-83', de: 100, vers: 400, duree: 1500, delai: 500 }, // photo
+    { sel: '.text-block-44', de: 100, vers: 415, duree: 1500, delai: 0 }    // web
+  ];
+
+  function titresVariables() {
+    TITRES.forEach(function (t) {
+      $$(t.sel).forEach(function (el) {
+        set(el, { fontVariationSettings: '"wght" ' + t.de });
+        animate(el, { fontVariationSettings: '"wght" ' + t.vers },
+          { duration: t.duree, delay: t.delai, easing: 'inOutQuad' });
+      });
+    });
+    // Les parties déjà maigres du titre le restent.
+    $$('.text-block-83 .text-span-35, .text-block-44 .text-span-35').forEach(function (el) {
+      set(el, { fontVariationSettings: '"wght" 100' });
+    });
+  }
+
+  /* ---------------------------------------------------------
      Colonnes du hero : « Projets photo » / « Projets webdesign »
      glissent depuis la gauche au survol de leur colonne, puis
      repartent un peu plus loin qu'ils n'étaient venus.
@@ -502,6 +527,7 @@
     bigLines();
     tutButtons();
     cardHovers();
+    titresVariables();
     headerLinks();
     faqs();
     flipcards();

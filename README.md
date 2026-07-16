@@ -105,6 +105,12 @@ La comparaison a aussi été refaite **aux cinq largeurs** couvrant les quatre p
 Le décompte d'éléments diffère de ±1 : ce sont les classes-marqueurs posées par les runtimes
 (`w-mod-js` côté Webflow, `is-ready` côté réplique). Aucun écart de mise en page.
 
+**Titres des rubriques** : `photo/` et `web/` ouvrent sur un titre dont la **graisse
+s'épaissit** au chargement — Unigeo est une police variable, et le titre passe de 100 à 400
+(`photo/`) ou 415 (`web/`) en 1500 ms `inOutQuad`. C'est l'effet le plus visible de ces
+pages ; il passe par `font-variation-settings`, un type d'animation que je n'avais pas
+repris, et le titre restait donc en maigre.
+
 Trois comportements non évidents, découverts en comparant et reproduits tels quels :
 
 - Les barres du hamburger ne sont **pas** colorées par le CSS. Le moteur d'origine leur
