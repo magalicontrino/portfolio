@@ -1,0 +1,346 @@
+/* =========================================================
+   magalicontrino.com — page d'entrée
+   Reproduction fidèle (géométrie et timings d'origine).
+   ========================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, div, span, main, a, img {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+:root {
+  --viewport-height: 100vh;
+  --background-height: 100vh;
+
+  /* Voile gris posé sur les photos de fond */
+  --bg-tint: rgba(56, 56, 56, 0.149);
+
+  /* Entrée : le bloc du logo est masqué par un aplat gris qui se dissout */
+  --onvisible-background-color: #8f8f8f;
+  --onvisible-speed: 1s;
+  --onvisible-delay: 0s;
+}
+
+/* L'échelle typographique pilote toute la mise en page : les tailles sont en rem.
+   Les paliers viennent du site d'origine — noter le saut en mobile (11pt),
+   où la maquette passe du logo horizontal au logo vertical. */
+html { font-size: 9pt; }
+@media (max-width: 1680px) { html { font-size: 6pt; } }
+@media (max-width: 980px)  { html { font-size: 5pt; } }
+@media (max-width: 736px)  { html { font-size: 11pt; } }
+
+body {
+  min-height: var(--viewport-height);
+  min-width: 320px;
+  overflow-x: hidden;
+  line-height: 1;
+  word-wrap: break-word;
+  background-color: #000;
+  -webkit-text-size-adjust: none;
+}
+
+img { max-width: 100%; vertical-align: top; }
+
+a { -webkit-tap-highlight-color: transparent; }
+
+/* ---------------------------------------------------------
+   Chargement : voile blanc qui se retire, contenu qui apparaît
+   --------------------------------------------------------- */
+body::after {
+  content: '';
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background-color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out 0.25s, visibility 0.5s 0.25s;
+}
+body.is-loading { pointer-events: none; }
+body.is-loading::after { opacity: 1; visibility: visible; }
+body.is-loading .site-main { opacity: 0; }
+
+/* ---------------------------------------------------------
+   Fond : diaporama en fondu enchaîné
+   --------------------------------------------------------- */
+.site-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--background-height);
+  z-index: 0;
+  pointer-events: none;
+  background-color: #000;
+}
+
+/* Voile gris uniforme au-dessus des photos */
+.site-bg::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: linear-gradient(to top, var(--bg-tint), var(--bg-tint));
+}
+
+/* Les vues sont empilées sous le voile (z-index négatifs dans le contexte
+   d'empilement de .site-bg) : seule la vue « visible » est opaque. */
+.site-bg > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  opacity: 0;
+  visibility: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: opacity 1s ease-in-out;
+}
+.site-bg > .visible { opacity: 1; visibility: visible; }
+.site-bg > .top { z-index: -1; }
+.site-bg > .initial { transition: none; }
+
+/* ---------------------------------------------------------
+   Ossature
+   --------------------------------------------------------- */
+.site-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--viewport-height);
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.site-main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  max-width: 100%;
+  text-align: center;
+  transition: opacity 0.5s ease-in-out 0.5s;
+}
+.site-main > .inner {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  max-width: 100%;
+  padding: 12rem 0;
+}
+@media (max-width: 736px) { .site-main > .inner { padding: 3.5rem 0; } }
+@media (max-width: 360px) { .site-main > .inner { padding: 2.625rem 0; } }
+
+/* ---------------------------------------------------------
+   Blocs image
+   --------------------------------------------------------- */
+.image {
+  display: block;
+  position: relative;
+  max-width: 100%;
+  line-height: 0;
+}
+.image > .frame {
+  display: inline-block;
+  overflow: hidden;
+  max-width: 100%;
+  width: 100%;
+  vertical-align: top;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+.image > .frame > img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* Les liens-flèche réagissent au survol par un léger zoom */
+.image--arrow > .frame,
+.image--arrow-mobile > .frame {
+  user-select: none;
+  -webkit-user-select: none;
+}
+.image--arrow > .frame > img,
+.image--arrow-mobile > .frame > img {
+  transition: transform 0.75s ease, filter 0.75s ease;
+}
+.image--arrow > .frame:hover > img,
+.image--arrow-mobile > .frame:hover > img {
+  transform: scale(1.06);
+}
+
+/* ---------------------------------------------------------
+   Desktop : logo + flèche, ancrés en haut à gauche
+   --------------------------------------------------------- */
+.logo-screen { position: relative; }
+.logo-screen__inner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 500px;
+  height: 500px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 5.75rem 0;
+  z-index: 2;
+}
+/* Aplat gris de l'animation d'entrée, sous les images */
+.logo-screen__inner::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--onvisible-background-color);
+  transition: background-color var(--onvisible-speed) ease var(--onvisible-delay);
+}
+.logo-screen__col {
+  flex: 0 0 auto;
+  width: 50%;
+  max-width: 100%;
+}
+
+.image--wordmark { text-align: right; }
+.image--wordmark > .frame {
+  width: 16.25rem;
+  height: 7rem;
+  transition: none;
+}
+.image--wordmark > .frame > img {
+  object-position: right;
+  transition: none;
+}
+
+.image--arrow { text-align: left; }
+.image--arrow > .frame {
+  width: 6.75rem;
+  height: 6.375rem;
+  border: 13px solid transparent;
+  border-radius: 1rem;
+}
+.image--arrow > .frame > img {
+  object-position: center;
+  border-radius: calc(1rem - 13px) !important;
+}
+
+/* ---------------------------------------------------------
+   Mobile : logo vertical, flèche dessous
+   --------------------------------------------------------- */
+/* Ce décalage vient de la maquette d'origine : le bloc n'y est pas centré
+   exactement, il retombe 19 px sous l'axe. Conservé tel quel. */
+.logo-mobile { position: relative; text-align: center; margin-top: 2.625rem; }
+.logo-mobile__inner {
+  position: relative;
+  display: inline-block;
+  width: 38rem;
+  max-width: 100%;
+  padding: 0.875rem 0;
+  text-align: center;
+  z-index: 2;
+}
+.logo-mobile__inner::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--onvisible-background-color);
+  transition: background-color var(--onvisible-speed) ease var(--onvisible-delay);
+}
+@media (max-width: 360px) { .logo-mobile__inner { padding: 0.65625rem 0; } }
+
+.image--wordmark-mobile { text-align: center; margin-bottom: 2.375rem; }
+.image--wordmark-mobile > .frame {
+  width: 15.375rem;
+  height: 25rem;
+  transition: none;
+}
+.image--wordmark-mobile > .frame > img {
+  object-position: bottom;
+  transition: none;
+}
+@media (max-width: 480px) { .image--wordmark-mobile > .frame { height: 20rem; } }
+@media (max-width: 360px) { .image--wordmark-mobile > .frame { height: 17.5rem; } }
+
+.image--arrow-mobile { text-align: center; margin-top: 0.5625rem; }
+.image--arrow-mobile > .frame {
+  width: 5.25rem;
+  max-width: 100%;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+}
+.image--arrow-mobile > .frame > img {
+  padding: 0.75rem;
+  object-position: bottom;
+  border-radius: inherit !important;
+}
+
+/* ---------------------------------------------------------
+   Bascule desktop / mobile
+   --------------------------------------------------------- */
+[data-visibility="mobile"] { display: none; }
+@media (max-width: 736px) {
+  [data-visibility="desktop"] { display: none; }
+  [data-visibility="mobile"] { display: block; }
+}
+
+/* ---------------------------------------------------------
+   Animations d'entrée
+   --------------------------------------------------------- */
+[data-onvisible] {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-timing-function: ease;
+}
+[data-onvisible="fade-up"]        { transform: translateY(12rem);  transition-duration: 1s;     transition-delay: 0.625s; }
+[data-onvisible="fade-up-soft"]   { transform: translateY(3rem);   transition-duration: 1.125s; transition-delay: 0.625s; }
+[data-onvisible="fade-right"]     { transform: translateX(-3rem);  transition-duration: 1.125s; transition-delay: 0.625s; }
+
+[data-onvisible].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* L'aplat gris se dissout en même temps que les images entrent */
+.is-visible.logo-screen__inner::after,
+.is-visible.logo-mobile__inner::after {
+  background-color: rgba(0, 0, 0, 0.001);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-bg > div,
+  [data-onvisible],
+  .logo-screen__inner::after,
+  .logo-mobile__inner::after,
+  .image > .frame > img {
+    transition: none !important;
+  }
+  [data-onvisible] { opacity: 1; transform: none; }
+}
