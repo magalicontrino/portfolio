@@ -202,34 +202,74 @@
   /* ---------------------------------------------------------
      Mégamenu
 
-     ATTENTION — comportement volontairement reproduit tel quel.
-     Sur le site d'origine, le mégamenu NE S'OUVRE PAS : le bouton
-     hamburger (#open) ne porte aucun `data-w-id`, donc aucune
-     interaction n'y est rattachée. Le seul effet du clic est le
-     script d'origine qui bascule le défilement de la page — ce qui
-     le bloque sans rien afficher. Vérifié sur le site en ligne, en
-     desktop comme en mobile, avec un vrai clic souris.
+     ÉCART ASSUMÉ avec le site d'origine, où le menu ne s'ouvre pas :
+     ses interactions d'ouverture existent (« Megamenu_open »), visent
+     bien `.nav-button-hamburger`, mais appartiennent à une autre page
+     du projet Webflow — le moteur ne les active donc jamais ici. Le
+     clic ne faisait que bloquer le défilement, sans rien afficher.
 
-     Le menu reste donc masqué, comme chez l'original. Pour le rendre
-     fonctionnel, il faudrait rattacher l'ouverture au bouton : c'est
-     une correction du site d'origine, pas une réplication.
+     Le menu est rebranché avec l'animation d'origine, valeur pour
+     valeur : barres qui s'écartent de ±100 px (outQuart 600 ms),
+     navbar qui passe en sombre, panneau en fondu. La fermeture reprend
+     « Megamenu_close » (opacité 800 ms, puis display none).
      --------------------------------------------------------- */
+  var NOIR = 'rgb(28, 26, 26)';
+  var BLANC = 'rgb(255, 255, 255)';
+
   function megamenu() {
     var trigger = document.getElementById('open');
     var menu = $('.navmenu');
+    var navbar = $('.navbar-2');
+    var top = $('.hamburger-line-top');
+    var mid = $('.hamburger-line-middle');
+    var bot = $('.hamburger-line-bottom');
 
-    // Le moteur d'origine applique ces états au chargement ; le CSS seul
-    // laisserait le menu visible et les barres du hamburger transparentes.
+    // État de repos : le moteur d'origine l'applique au chargement ; sans lui
+    // le menu s'afficherait et les barres resteraient transparentes.
     if (menu) set(menu, { display: 'none', opacity: '0' });
-    $$('.hamburger-line-top, .hamburger-line-middle, .hamburger-line-bottom')
-      .forEach(function (l) { l.style.backgroundColor = 'rgb(28, 26, 26)'; });
+    [top, mid, bot].forEach(function (l) { if (l) l.style.backgroundColor = NOIR; });
 
-    if (!trigger) return;
-    var clicks = 0;
+    if (!trigger || !menu) return;
+    var open = false;
+
+    function openMenu() {
+      open = true;
+      document.body.style.overflow = 'hidden';
+      menu.style.display = 'block';
+      animate(menu, { opacity: '1' }, { duration: 100, easing: 'ease' });
+      animate(top, { transform: 'translateX(-100px)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
+      animate(bot, { transform: 'translateX(100px)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
+      animate(mid, { backgroundColor: 'rgb(51, 51, 51)' }, { duration: 500, easing: 'ease' });
+      if (navbar) animate(navbar, { backgroundColor: NOIR }, { duration: 500, easing: 'ease' });
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+      if (!open) return;
+      open = false;
+      document.body.style.overflow = 'auto';
+      animate(menu, { opacity: '0' }, { duration: 800, easing: 'ease' });
+      animate(top, { transform: 'translateX(0px)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
+      animate(bot, { transform: 'translateX(0px)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
+      animate(mid, { backgroundColor: NOIR }, { duration: 200, easing: 'ease' });
+      if (navbar) animate(navbar, { backgroundColor: BLANC }, { duration: 600, easing: 'ease' });
+      trigger.setAttribute('aria-expanded', 'false');
+      setTimeout(function () { if (!open) menu.style.display = 'none'; }, 800);
+    }
+
+    trigger.setAttribute('aria-expanded', 'false');
     trigger.addEventListener('click', function (e) {
       e.preventDefault();
-      clicks += 1;
-      document.body.style.overflow = (clicks % 2 === 0) ? 'auto' : 'hidden';
+      if (open) closeMenu(); else openMenu();
+    });
+
+    // Suivre un lien du menu le referme (comportement d'origine).
+    $$('.navlink, .contact-big, .contact-big-mobile', menu).forEach(function (a) {
+      a.addEventListener('click', closeMenu);
+    });
+    // Échap : le menu couvre tout l'écran, il faut pouvoir en sortir.
+    addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMenu();
     });
   }
 

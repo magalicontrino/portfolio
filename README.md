@@ -117,6 +117,31 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
   repartent un peu plus loin qu'ils n'étaient venus (−120 px / −170 px). L'intro du
   chargement, elle, ne les ramène pas : seul le survol le fait.
 
+## Écarts assumés : ce qui a été réparé
+
+La réplique visait d'abord l'identique au pixel. Quatre choses étaient **cassées sur le site
+d'origine** et avaient donc été reproduites cassées. Elles sont désormais **réparées** : le
+site fonctionne, au prix d'un écart documenté avec l'original.
+
+| Ce qui était cassé | État d'origine | Réparation |
+|---|---|---|
+| **Mégamenu** | Ne s'ouvrait pas, et le clic bloquait le défilement de la page sans rien afficher | Rebranché **avec l'animation d'origine**, valeur pour valeur |
+| **Liens « Photographie pro / perso »** | Vers `magalicontrinophotographie.webflow.io`, site supprimé (404 partout) | Pointent vers `photo/` |
+| **Lien « Webdesign »** | Vers `/webdesign`, 404 | Pointe vers `web/` |
+| **Lien de contact** (14 occurrences) | `https://magalicontrino@hotmail.fr` — coquille, ne faisait rien | `mailto:magalicontrino@hotmail.fr` |
+| **2 images** (`arrow.svg`, `MacBook.png`) | Empruntées à d'autres sites Webflow, refusées par leur CDN (403) | Balises retirées : elles ne s'affichaient de toute façon pas |
+
+Le mégamenu mérite un mot. Ses interactions d'ouverture **existent** dans le projet Webflow
+(« Megamenu_open ») et visent bien `.nav-button-hamburger` — mais elles appartiennent à une
+autre page du projet, et le moteur ne les active que sur leur page d'origine. Le menu avait
+donc été conçu, animé, puis jamais rebranché. La réparation ne réinvente rien : elle rejoue
+l'animation prévue (barres qui s'écartent de ±100 px en `outQuart` 600 ms, navbar qui passe
+en sombre, panneau en fondu ; fermeture en 800 ms). Ajout non prévu à l'origine : la touche
+`Échap` referme le menu, qui couvre tout l'écran.
+
+Ces réparations ne changent aucune mise en page : les hauteurs des 21 pages restent
+identiques au site en ligne.
+
 ## Comment c'est construit
 
 - **HTML** : structure d'origine conservée (classes et `data-w-id`, cibles des animations),
@@ -155,24 +180,9 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
   volet, mais **aucun élément ne porte la classe `transition-trigger`** qu'il attend, et le
   volet (`.whipe-intro`) vit dans un bloc en `display: none`. Vérifié sur le site en ligne :
   le script tourne à vide, il ne se passe rien. Ne rien reproduire est donc fidèle.
-- **Le mégamenu ne s'ouvre pas** — et c'est fidèle. Sur le site d'origine, le bouton
-  hamburger ne porte aucun `data-w-id` : aucune interaction n'y est rattachée. Le seul effet
-  du clic est le script d'origine qui bascule le défilement, ce qui **bloque la page sans
-  rien afficher**. Vérifié en ligne, desktop et mobile, avec un vrai clic. Le menu était
-  conçu pour s'ouvrir (l'interaction de fermeture existe, elle) mais son déclencheur n'a
-  jamais été relié. La navigation passe donc par les liens de la page.
-- Le lien du menu vers `/webdesign` est neutralisé : cette page renvoie **déjà un 404 sur le
-  site d'origine**.
-- Deux images (`arrow.svg`, `MacBook.png`) empruntées par les pages projet à d'autres sites
-  Webflow renvoient un 403 : elles sont **déjà cassées sur le site d'origine**, et le sont
-  donc ici aussi. Leur URL est laissée telle quelle.
-- Le mégamenu pointe encore vers `magalicontrinophotographie.webflow.io` (« Photographie
-  pro » / « Photographie perso ») : ce second site **n'existe plus** — toutes ses URL
-  renvoient un 404. Les liens sont déjà morts sur le site d'origine.
+- Les cinq réparations ci-dessus sont les seuls écarts volontaires avec le site d'origine.
 - Page d'entrée : son favicon, son apple-touch-icon et son image de partage sont référencés
   par le site d'origine mais renvoient un 404 — références retirées plutôt que reproduites.
   Le portfolio, lui, a bien son favicon : il est repris et servi en local.
-- Le lien de contact pointe vers `https://magalicontrino@hotmail.fr`, une coquille du site
-  d'origine (ce devrait être un `mailto:`). Conservée telle quelle.
 - En mobile, le bloc de la page d'entrée n'est pas centré exactement : il retombe 19 px
   sous l'axe, comme sur le site d'origine. Reproduit sciemment.
