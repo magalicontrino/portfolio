@@ -142,6 +142,16 @@ en sombre, panneau en fondu ; fermeture en 800 ms). Ajout non prévu à l'origin
 Ces réparations ne changent aucune mise en page : les hauteurs des 21 pages restent
 identiques au site en ligne.
 
+## Mises à jour et cache
+
+Les liens vers `style.css`, `app.js` et `luxy.js` portent une **empreinte du contenu**
+(`?v=8db0ad17`). Sans elle, GitHub Pages laisse les navigateurs rejouer l'ancienne version
+après un déploiement : le site paraît inchangé, ou pire, une page à jour tourne avec un
+script périmé. L'empreinte change avec le fichier, donc le navigateur recharge exactement
+ce qu'il faut, et seulement ça.
+
+Ces empreintes sont recalculées à la génération des pages : rien à faire à la main.
+
 ## Comment c'est construit
 
 - **HTML** : structure d'origine conservée (classes et `data-w-id`, cibles des animations),
