@@ -142,6 +142,22 @@ en sombre, panneau en fondu ; fermeture en 800 ms). Ajout non prévu à l'origin
 Ces réparations ne changent aucune mise en page : les hauteurs des 21 pages restent
 identiques au site en ligne.
 
+## Poids : pourquoi les photos ne sont pas compressées
+
+Le dépôt pèse ~221 Mo, presque uniquement des photos en pleine qualité. C'est lourd à
+cloner, mais **cela ne coûte rien au visiteur** — mesuré sur le site en ligne :
+
+| | |
+|---|---|
+| Arrivée sur une galerie | **0,16 Mo**, 4 images |
+| Après défilement à mi-page | 3,55 Mo, 20 images (30 encore non chargées) |
+| Photo la plus lourde | ~530 Ko |
+
+Le `loading="lazy"` du balisage d'origine, conservé, ne charge que ce qu'on atteint. Les
+photos ne sont donc pas recompressées : ce serait dégrader les images d'un portfolio de
+photographe pour économiser du temps de `git clone`, pas du temps de chargement. Les
+fichiers sont ceux du site d'origine, à l'octet près.
+
 ## Mises à jour et cache
 
 Les liens vers `style.css`, `app.js` et `luxy.js` portent une **empreinte du contenu**
