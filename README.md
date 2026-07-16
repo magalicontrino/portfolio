@@ -13,7 +13,11 @@ découvre le portfolio sans jamais changer d'URL, comme la chaîne d'origine
 |---|---|---|
 | `index.html` | — | La seule adresse. Assemble les deux étages ci-dessous. |
 | `entree/` | magalicontrino.com (Carrd) | Page d'entrée : photo de fond, logo, flèche |
-| `accueil/` | magalicontrino.webflow.io (Webflow) | Accueil du portfolio, derrière la flèche |
+| `accueil/` | magalicontrino.webflow.io | Accueil du portfolio, derrière la flèche |
+| `photo/` `web/` `infos/` | idem | Les trois rubriques |
+| `websites/<slug>/` | idem | 5 pages projet web (CMS) |
+| `projets-photo/<slug>/` | idem | 12 galeries photo (CMS) |
+| `assets/` | — | CSS, JS, police et images, partagés par toutes les pages |
 
 Chaque étage garde son propre document, et `index.html` les superpose. Ce n'est pas un
 détail d'implémentation gratuit : les deux définissent chacun leurs règles `html`/`body`,
@@ -21,8 +25,7 @@ et les fusionner décalerait la mise en page — les tailles en `rem` dépendent
 `font-size` racine, que la page d'entrée redéfinit à chaque palier. Les documents isolés
 préservent au pixel près la géométrie vérifiée ci-dessous.
 
-Les pages à reconstruire viendront à côté — `photo/`, `web/`, `infos/` — ce qui reproduit
-la structure du site Webflow, où elles sont voisines de l'accueil.
+**Le site est complet : 21 pages**, soit tout le site Webflow d'origine.
 
 ## Mise en ligne (GitHub Pages)
 
@@ -66,15 +69,27 @@ Animations reprises : fondu enchaîné des 4 photos (1 s de fondu, 3,875 s par i
 dissout, logo qui monte (`fade-up`, 1 s) et flèche qui glisse depuis la gauche
 (`fade-right`, 1,125 s) après 625 ms, zoom `scale(1.06)` au survol.
 
-**Accueil du portfolio** — relevé de 14 groupes d'éléments (position, taille, opacité)
-comparé au live à 1440 px : **identique caractère pour caractère**, y compris la hauteur
-de page (4320) et la couleur des barres du menu.
+**Toutes les pages** — chaque page a été comparée au live à 1440 px : position et taille de
+chaque élément dans l'ordre du document, hauteur totale de page, largeur de scroll.
+Résultat identique caractère pour caractère sur les pages vérifiées (accueil, photo, web,
+infos, une page projet, une galerie) :
 
-Deux comportements non évidents, découverts en comparant et reproduits tels quels :
+| Page | Hauteur | Verdict |
+|---|---|---|
+| `accueil/` | 4320 | identique |
+| `photo/` | 4603 | identique |
+| `web/` | 900 | identique |
+| `infos/` | 3048 | identique |
+| `websites/kioskup/` | 4231 | identique |
+| `projets-photo/nature/` | 3970 | identique (68 images) |
+
+Trois comportements non évidents, découverts en comparant et reproduits tels quels :
 
 - Les barres du hamburger ne sont **pas** colorées par le CSS. Le moteur d'origine leur
   applique au chargement l'état de repos de l'interaction de fermeture du mégamenu
   (`rgb(28,26,26)`). Sans ça, deux des trois barres restent invisibles.
+- Le voile légendé des cartes de projet (`.card-hover-2`) n'est masqué que par le moteur,
+  pas par le CSS. Sans ça, il recouvre les photos en permanence.
 - « Projets photo » / « Projets webdesign » (`.txt-vertical-intro-top`) **gardent** leur
   décalage de départ (−112 px / −160 px) et restent hors cadre à gauche : le site d'origine
   ne les ramène jamais à zéro.
@@ -93,18 +108,21 @@ Deux comportements non évidents, découverts en comparant et reproduits tels qu
 
 ## Limites connues
 
-- Le pixel-perfect du portfolio est vérifié **à 1440 px, sur le premier écran**. La page
-  fait 4320 px de haut ; le reste et les autres largeurs n'ont pas été comparés élément
-  par élément.
+- Le relevé est fait **à 1440 px**. Les autres largeurs n'ont pas été comparées élément par
+  élément. Six des 21 pages ont été comparées au live ; les 15 autres sortent du même
+  pipeline, mais n'ont pas été relevées une à une.
 - **Révélations au scroll** : le bas de page apparaît en 1 s à l'entrée dans le viewport.
   Aucune interaction d'origine ne cible ces éléments par identifiant : la durée est une
   approximation raisonnable, pas une valeur relevée.
 - **Non repris** : le scroll lissé (luxy.js) et les transitions entre pages. Les deux se
   voient à l'usage.
-- Les liens vers `/photo`, `/web` et `/infos` sont neutralisés : ces pages restent à
-  reconstruire. Le lien « Home » du menu ramène à l'accueil du portfolio, comme sur le
-  site d'origine. Une partie des photos vit sur un second site
-  (`magalicontrinophotographie.webflow.io`).
+- Le lien du menu vers `/webdesign` est neutralisé : cette page renvoie **déjà un 404 sur le
+  site d'origine**.
+- Deux images (`arrow.svg`, `MacBook.png`) empruntées par les pages projet à d'autres sites
+  Webflow renvoient un 403 : elles sont **déjà cassées sur le site d'origine**, et le sont
+  donc ici aussi. Leur URL est laissée telle quelle.
+- Une partie des photos vit sur un second site (`magalicontrinophotographie.webflow.io`),
+  vers lequel le mégamenu pointe encore.
 - Le favicon, l'apple-touch-icon et l'image de partage sont référencés par le site
   d'origine mais renvoient un 404 : références retirées plutôt que reproduites.
 - Le lien de contact pointe vers `https://magalicontrino@hotmail.fr`, une coquille du site
