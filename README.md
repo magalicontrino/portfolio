@@ -75,6 +75,18 @@ aux transforms et donc aux animations en cours).
 
 **Les 21 hauteurs sont identiques.**
 
+La comparaison a aussi été refaite **aux cinq largeurs** couvrant les quatre paliers du site
+(Webflow bascule à 991, 767 et 479 px). Toutes identiques :
+
+| Largeur | Palier | accueil | photo | infos | kioskup (projet) | nature (galerie) |
+|---|---|---|---|---|---|---|
+| 1920 | main | 5238 | 5519 | 3872 | 6068 | — |
+| 1440 | main | 4320 | 4603 | 3048 | 4922 | 6895 |
+| 768 | medium | 4915 | 3404 | 4340 | 6360 | — |
+| 600 | small | 4050 | 6251 | 3730 | 5643 | 5150 |
+| 375 | tiny | 3816 | 5535 | 3594 | 5802 | 4507 |
+
+
 | Page | Hauteur | | Page | Hauteur |
 |---|---|---|---|---|
 | `accueil/` | 4320 | | `projets-photo/kioskup/` | 8957 |
@@ -121,8 +133,9 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
 
 ## Limites connues
 
-- Le relevé est fait **à 1440 px**. Les autres largeurs n'ont pas été comparées élément par
-  élément.
+- Le relevé exhaustif des 21 pages est fait **à 1440 px** ; les quatre autres largeurs ont
+  été contrôlées sur un échantillon de 5 pages couvrant chaque famille (accueil, rubrique,
+  page projet, galerie).
 - **Révélations au scroll** : le bas de page apparaît en 1 s à l'entrée dans le viewport.
   Aucune interaction d'origine ne cible ces éléments par identifiant : la durée est une
   approximation raisonnable, pas une valeur relevée.
