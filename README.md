@@ -8,7 +8,10 @@ Le site d'origine est en deux étages, reproduits ici tels quels :
 | URL | Origine | Rôle |
 |---|---|---|
 | `/` | magalicontrino.com (Carrd) | Page d'entrée : photo de fond, logo, flèche |
-| `/portfolio/` | magalicontrino.webflow.io (Webflow) | Accueil du portfolio, derrière la flèche |
+| `/accueil/` | magalicontrino.webflow.io (Webflow) | Accueil du portfolio, derrière la flèche |
+
+Les pages à reconstruire viendront à côté — `/photo/`, `/web/`, `/infos/` — ce qui reproduit
+la structure du site Webflow, où elles sont voisines de l'accueil.
 
 ## Mise en ligne (GitHub Pages)
 
@@ -88,7 +91,8 @@ Deux comportements non évidents, découverts en comparant et reproduits tels qu
 - **Non repris** : le scroll lissé (luxy.js) et les transitions entre pages. Les deux se
   voient à l'usage.
 - Les liens vers `/photo`, `/web` et `/infos` sont neutralisés : ces pages restent à
-  reconstruire. Une partie des photos vit sur un second site
+  reconstruire. Le lien « Home » du menu ramène à l'accueil du portfolio, comme sur le
+  site d'origine. Une partie des photos vit sur un second site
   (`magalicontrinophotographie.webflow.io`).
 - Le favicon, l'apple-touch-icon et l'image de partage sont référencés par le site
   d'origine mais renvoient un 404 : références retirées plutôt que reproduites.
