@@ -136,6 +136,7 @@ site fonctionne, au prix d'un écart documenté avec l'original.
 | **Lien « Webdesign »** | Vers `/webdesign`, 404 | Pointe vers `web/` |
 | **Lien de contact** (14 occurrences) | `https://magalicontrino@hotmail.fr` — coquille, ne faisait rien | `mailto:magalicontrino@hotmail.fr` |
 | **2 images** (`arrow.svg`, `MacBook.png`) | Empruntées à d'autres sites Webflow, refusées par leur CDN (403) | Balises retirées : elles ne s'affichaient de toute façon pas |
+| **Ancres vides** (`<a href="#">`) | Webflow s'en sert comme accroche à clic (FAQ, bouton « les tarifs ici », cartes) : suivre l'ancre renvoyait le navigateur **en haut de page** | Navigation neutralisée pour les seuls `href="#"`. Les vraies ancres (`#nav`, retour en haut) fonctionnent toujours |
 
 Le mégamenu mérite un mot. Ses interactions d'ouverture **existent** dans le projet Webflow
 (« Megamenu_open ») et visent bien `.nav-button-hamburger` — mais elles appartiennent à une

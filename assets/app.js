@@ -390,17 +390,23 @@
   /* ---------------------------------------------------------
      FAQ : survol, puis ouverture/fermeture au clic
      --------------------------------------------------------- */
-  function faqs() {
-    // Chaque bloc est enveloppé dans <a href="#"> : sans cette garde, le clic
-    // fait sauter le navigateur en haut de page au lieu d'ouvrir la réponse.
-    $$('.faqs_content a[href="#"], .faqs_item').forEach(function (el) {
-      var a = el.tagName === 'A' ? el : el.closest('a[href="#"]');
-      if (a && !a.dataset.inerte) {
-        a.dataset.inerte = '1';
-        a.addEventListener('click', function (e) { e.preventDefault(); });
-      }
-    });
+  /* ---------------------------------------------------------
+     Ancres vides
 
+     Webflow se sert de `<a href="#">` comme simple accroche à clic :
+     la FAQ, le bouton « les tarifs ici », les cartes. Suivre ces
+     ancres renvoie le navigateur en haut de page — la réponse s'ouvre
+     ou la carte pivote, mais on ne les voit plus. On neutralise donc
+     la navigation partout, sans toucher aux vraies ancres (#nav).
+     --------------------------------------------------------- */
+  function ancresVides() {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href="#"]');
+      if (a) e.preventDefault();
+    }, true);
+  }
+
+  function faqs() {
     $$('.faqs_item').forEach(function (item) {
       var q = $('.faqs_question', item);
       var icon = $('.faqs_top-icon', item);
@@ -558,6 +564,7 @@
     bigLines();
     tutButtons();
     cardHovers();
+    ancresVides();
     titresVariables();
     headerLinks();
     faqs();
