@@ -200,10 +200,16 @@ Ces empreintes sont recalculées à la génération des pages : rien à faire à
   leurs courbes — les lettres du grand titre remontent en cascade (750 ms `outQuart`,
   50 ms d'écart entre chacune) et repartent quand la section quitte l'écran ; les blocs de
   la FAQ glissent depuis la gauche (−101 %, 1500 ms `outQuart`).
-- **Parallaxes liées au scroll** : trois effets suivent la progression de l'élément à
-  travers l'écran, et non une durée — l'écran d'accueil (120 → −50 px sur 0–70 % de la
-  traversée), la maquette de `loransse-doe` (0 → −88 % entre 50 et 65 %) et son triptyque
-  de téléphones (0 → −16 vh sur toute la traversée).
+- **Effets liés au scroll** : cinq effets suivent la progression de l'élément à travers
+  l'écran, et non une durée. Le plus visible est sur l'accueil : les **deux photos côte à
+  côte changent de proportion** — celle de droite passe de 35 % à 65 % de largeur pendant
+  que la section défile. S'y ajoutent l'écran d'accueil (120 → −50 px sur 0–70 % de la
+  traversée), la maquette de `loransse-doe` (0 → −88 % entre 50 et 65 %), son triptyque de
+  téléphones (0 → −16 vh) et les cartes des pages projet (échelle 1 → 0,8 entre 40 et 100 %).
+
+  Attention en les relisant : l'élément **pilote** (celui qui déclenche en traversant
+  l'écran) et la **cible** (celle qui bouge) sont souvent différents — les confondre fige
+  l'effet sans rien casser d'autre, donc sans que rien ne le signale.
 - **Scroll inertiel (luxy.js)** : repris. La bibliothèque d'origine (luxy.js v0.1.0, MIT,
   Mineo Okuda) est embarquée en local plutôt qu'appelée sur un CDN, et initialisée avec les
   mêmes réglages (`wrapperSpeed: 0.065`, désactivé sur mobile). Comme sur le site d'origine,

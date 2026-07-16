@@ -166,32 +166,44 @@
      La valeur suit la traversée de l'écran par l'élément, entre
      deux images-clés — pas une transition minutée.
      --------------------------------------------------------- */
+  /* `pilote` déclenche l'effet en traversant l'écran ; `cible` est ce qui
+     bouge. Les deux diffèrent souvent — s'y tromper fige l'effet. */
   var PARALLAX = [
-    { sel: '.ecran-site-accueil', axis: 'Y', from: 120, to: -50, unit: 'px', k0: 0, k1: 70 },
-    { sel: '.image-43', axis: 'Y', from: 0, to: -88, unit: '%', k0: 50, k1: 65 },
-    { sel: '.gallery-track', axis: 'X', from: 0, to: -16, unit: 'vh', k0: 0, k1: 100 }
+    { pilote: '.ecran-site-accueil', cible: null, prop: 'translateY', de: 120, vers: -50, unit: 'px', k0: 0, k1: 70 },
+    { pilote: '.ecran-2', cible: '.image-43', prop: 'translateY', de: 0, vers: -88, unit: '%', k0: 50, k1: 65 },
+    { pilote: '.gallery', cible: '.gallery-track', prop: 'translateX', de: 0, vers: -16, unit: 'vh', k0: 0, k1: 100 },
+    // Les deux photos côte à côte : celle de gauche s'élargit de 35 % à 65 %
+    // pendant que la section défile.
+    { pilote: '.large-growing-images', cible: '.growing-image.small', prop: 'width', de: 35, vers: 65, unit: '%', k0: 0, k1: 100 },
+    { pilote: '.home-process_card-wrapper', cible: null, prop: 'scale', de: 1, vers: 0.8, unit: '', k0: 40, k1: 100 }
   ];
 
   function parallax() {
     if (reduce) return;
     var items = [];
     PARALLAX.forEach(function (p) {
-      $$(p.sel).forEach(function (el) { items.push({ el: el, p: p }); });
+      $$(p.pilote).forEach(function (pilote) {
+        var cibles = p.cible ? $$(p.cible, pilote) : [pilote];
+        if (p.cible && !cibles.length) cibles = $$(p.cible); // cible hors du pilote
+        cibles.forEach(function (c) { items.push({ pilote: pilote, cible: c, p: p }); });
+      });
     });
     if (!items.length) return;
 
     function tick() {
       var vh = window.innerHeight;
       items.forEach(function (it) {
-        var r = it.el.getBoundingClientRect();
-        // 0 % : l'élément entre par le bas ; 100 % : il sort par le haut.
+        var r = it.pilote.getBoundingClientRect();
+        // 0 % : le pilote entre par le bas ; 100 % : il sort par le haut.
         var prog = (vh - r.top) / (vh + r.height) * 100;
         var p = it.p;
         var t = (prog - p.k0) / (p.k1 - p.k0);
         t = Math.max(0, Math.min(1, t));
-        var v = p.from + (p.to - p.from) * t;
-        it.el.style.transition = 'none';
-        it.el.style.transform = 'translate' + p.axis + '(' + v.toFixed(2) + p.unit + ')';
+        var v = p.de + (p.vers - p.de) * t;
+        it.cible.style.transition = 'none';
+        if (p.prop === 'width') it.cible.style.width = v.toFixed(2) + p.unit;
+        else if (p.prop === 'scale') it.cible.style.transform = 'scale(' + v.toFixed(3) + ')';
+        else it.cible.style.transform = p.prop + '(' + v.toFixed(2) + p.unit + ')';
       });
     }
     tick();
