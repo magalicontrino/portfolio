@@ -336,6 +336,25 @@
   }
 
   /* ---------------------------------------------------------
+     Contenu masqué au départ (interaction « fond-noir-intro »)
+
+     Sur /web, `.wrap-home` porte `style="display:none"` en dur dans le
+     HTML : c'est l'état de départ d'une animation qui le repasse en
+     `block` 500 ms après le chargement. Sans elle, TOUTE la page reste
+     vide sous son titre — c'est ce qui arrivait ici.
+     --------------------------------------------------------- */
+  function contenuDifferé() {
+    $$('.wrap-home').forEach(function (el) {
+      if (getComputedStyle(el).display !== 'none') return;
+      setTimeout(function () { el.style.display = 'block'; }, reduce ? 0 : 500);
+    });
+    // Le voile d'intro se retire vers la gauche pendant ce temps.
+    $$('.preload-2').forEach(function (el) {
+      animate(el, { transform: 'translateX(-100%)' }, { duration: 1500, easing: 'inOutQuad' });
+    });
+  }
+
+  /* ---------------------------------------------------------
      Titres des rubriques : la graisse s'épaissit au chargement
      Unigeo est une police variable (100–820) : le titre part en
      maigre et prend du corps. C'est l'effet le plus visible de ces
@@ -565,6 +584,7 @@
     tutButtons();
     cardHovers();
     ancresVides();
+    contenuDifferé();
     titresVariables();
     headerLinks();
     faqs();

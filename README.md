@@ -82,6 +82,10 @@ La comparaison a aussi été refaite **aux cinq largeurs** couvrant les quatre p
 |---|---|---|---|---|---|---|
 | 1920 | main | 5238 | 5519 | 3872 | 6068 | — |
 | 1440 | main | 4320 | 4603 | 3048 | 4922 | 6895 |
+
+> Le relevé de `web/` a longtemps affiché 900 des deux côtés : la page y était mesurée **figée**
+> sur son état de départ, avant que l'animation de chargement ne révèle son contenu. Les deux
+> côtés étaient faux de la même façon, donc concordants. Sa vraie hauteur est 3817.
 | 768 | medium | 4915 | 3404 | 4340 | 6360 | — |
 | 600 | small | 4050 | 6251 | 3730 | 5643 | 5150 |
 | 375 | tiny | 3816 | 5535 | 3594 | 5802 | 4507 |
@@ -91,7 +95,7 @@ La comparaison a aussi été refaite **aux cinq largeurs** couvrant les quatre p
 |---|---|---|---|---|
 | `accueil/` | 4320 | | `projets-photo/kioskup/` | 8957 |
 | `photo/` | 4603 | | `projets-photo/noir-et-blanc/` | 8400 |
-| `web/` | 900 | | `projets-photo/nature/` | 6895 |
+| `web/` | 3817 | | `projets-photo/nature/` | 6895 |
 | `infos/` | 3048 | | `projets-photo/reciproque/` | 9596 |
 | `websites/ambassadeurs/` | 4922 | | `projets-photo/en-couleur/` | 8677 |
 | `websites/casa-linear/` | 4922 | | `projets-photo/musique/` | 6453 |
@@ -136,6 +140,7 @@ site fonctionne, au prix d'un écart documenté avec l'original.
 | **Lien « Webdesign »** | Vers `/webdesign`, 404 | Pointe vers `web/` |
 | **Lien de contact** (14 occurrences) | `https://magalicontrino@hotmail.fr` — coquille, ne faisait rien | `mailto:magalicontrino@hotmail.fr` |
 | **2 images** (`arrow.svg`, `MacBook.png`) | Empruntées à d'autres sites Webflow, refusées par leur CDN (403) | Balises retirées : elles ne s'affichaient de toute façon pas |
+| **Contenu de `/web`** | `.wrap-home` porte `display:none` en dur ; l'animation qui le révèle après 500 ms est rejouée — sans elle la page reste **vide sous son titre** | Reprise de l'interaction d'origine |
 | **Ancres vides** (`<a href="#">`) | Webflow s'en sert comme accroche à clic (FAQ, bouton « les tarifs ici », cartes) : suivre l'ancre renvoyait le navigateur **en haut de page** | Navigation neutralisée pour les seuls `href="#"`. Les vraies ancres (`#nav`, retour en haut) fonctionnent toujours |
 
 Le mégamenu mérite un mot. Ses interactions d'ouverture **existent** dans le projet Webflow
@@ -211,10 +216,9 @@ Ces empreintes sont recalculées à la génération des pages : rien à faire à
   Attention en les relisant : l'élément **pilote** (celui qui déclenche en traversant
   l'écran) et la **cible** (celle qui bouge) sont souvent différents — les confondre fige
   l'effet sans rien casser d'autre, donc sans que rien ne le signale.
-- **Scroll inertiel (luxy.js)** : repris. La bibliothèque d'origine (luxy.js v0.1.0, MIT,
-  Mineo Okuda) est embarquée en local plutôt qu'appelée sur un CDN, et initialisée avec les
-  mêmes réglages (`wrapperSpeed: 0.065`, désactivé sur mobile). Comme sur le site d'origine,
-  elle ne s'applique qu'aux trois pages qui portent `#luxy` : `photo/`, `web/`, `infos/`.
+- **Scroll inertiel (luxy.js)** : **retiré à la demande**. Le site d'origine l'active sur
+  `photo/`, `web/` et `infos/` ; ici le défilement est natif partout. Le conteneur `#luxy`
+  reste dans le HTML, inerte, et la bibliothèque n'est plus chargée.
 - **Transitions entre pages** : le site d'origine embarque le script d'une transition en
   volet, mais **aucun élément ne porte la classe `transition-trigger`** qu'il attend, et le
   volet (`.whipe-intro`) vit dans un bloc en `display: none`. Vérifié sur le site en ligne :
