@@ -391,6 +391,16 @@
      FAQ : survol, puis ouverture/fermeture au clic
      --------------------------------------------------------- */
   function faqs() {
+    // Chaque bloc est enveloppé dans <a href="#"> : sans cette garde, le clic
+    // fait sauter le navigateur en haut de page au lieu d'ouvrir la réponse.
+    $$('.faqs_content a[href="#"], .faqs_item').forEach(function (el) {
+      var a = el.tagName === 'A' ? el : el.closest('a[href="#"]');
+      if (a && !a.dataset.inerte) {
+        a.dataset.inerte = '1';
+        a.addEventListener('click', function (e) { e.preventDefault(); });
+      }
+    });
+
     $$('.faqs_item').forEach(function (item) {
       var q = $('.faqs_question', item);
       var icon = $('.faqs_top-icon', item);
@@ -434,6 +444,15 @@
      Cartes retournables (/infos) et vignette qui s'ouvre au survol
      --------------------------------------------------------- */
   function flipcards() {
+    // La face arrière est déjà pivotée de 180° en CSS et les deux faces sont en
+    // `backface-visibility: hidden`. Il manque le contexte 3D sur le conteneur :
+    // sans lui, la rotation s'aplatit et l'arrière s'affiche EN MIROIR. Le moteur
+    // d'origine le pose automatiquement sur les éléments qu'il anime.
+    $$('.flipcard-wrapper').forEach(function (wrap) {
+      wrap.style.transformStyle = 'preserve-3d';
+      wrap.style.perspective = '1000px';
+    });
+
     $$('.text-wrapper-5').forEach(function (w) {
       var wrap = w.closest('.flipcard-wrapper');
       var img = $('.img-parent', w) || $('.img-parent', w.parentElement || w);
