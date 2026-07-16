@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light only" />
+<title>magalicontrino</title>
+<meta name="description" content="Webdesign et Photographie" />
+<meta property="og:site_name" content="magalicontrino" />
+<meta property="og:title" content="magalicontrino" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="Webdesign et Photographie" />
+<meta property="og:url" content="https://magalicontrino.com" />
+<meta property="twitter:card" content="summary_large_image" />
+<!-- Le site d'origine pointe vers favicon.png, apple-touch-icon.png et share.jpg,
+     qui renvoient tous un 404 : références volontairement omises. -->
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="is-loading">
+
+  <!-- Fond : diaporama d'images en crossfade (rempli par script.js) -->
+  <div class="site-bg" aria-hidden="true"></div>
+
+  <div class="site-wrapper">
+    <main class="site-main">
+      <div class="inner">
+
+        <!-- Version desktop : logo + flèche côte à côte, ancrés en haut à gauche -->
+        <div class="logo-screen" data-visibility="desktop">
+          <div class="logo-screen__inner" data-onvisible-trigger>
+            <div class="logo-screen__col">
+              <div class="image image--wordmark" data-onvisible="fade-up">
+                <span class="frame"><img src="assets/images/image03.png" alt="Mag." /></span>
+              </div>
+            </div>
+            <div class="logo-screen__col">
+              <div class="image image--arrow" data-onvisible="fade-right">
+                <a href="#" data-enter class="frame" aria-label="Entrer sur le portfolio">
+                  <img src="assets/images/image04.png" alt="" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Version mobile : logo vertical + flèche dessous, centrés -->
+        <div class="logo-mobile" data-visibility="mobile">
+          <div class="logo-mobile__inner" data-onvisible-trigger>
+            <div class="image image--wordmark-mobile" data-onvisible="fade-up">
+              <span class="frame"><img src="assets/images/image01.png" alt="Mag." /></span>
+            </div>
+            <div class="image image--arrow-mobile" data-onvisible="fade-up-soft">
+              <a href="#" data-enter class="frame" aria-label="Entrer sur le portfolio">
+                <img src="assets/images/image02.png" alt="" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Enveloppee dans la page d'accueil : la fleche ne change pas d'adresse,
+    // elle demande au parent de decouvrir le portfolio.
+    document.querySelectorAll('[data-enter]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (parent !== window) parent.postMessage('enter', '*');
+        else location.href = '../accueil/';
+      });
+    });
+  </script>
+</body>
+</html>

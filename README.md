@@ -5,12 +5,23 @@ sans jQuery, sans CDN. Police et images en local, aucune dépendance externe.
 
 Le site d'origine est en deux étages, reproduits ici tels quels :
 
-| URL | Origine | Rôle |
-|---|---|---|
-| `/` | magalicontrino.com (Carrd) | Page d'entrée : photo de fond, logo, flèche |
-| `/accueil/` | magalicontrino.webflow.io (Webflow) | Accueil du portfolio, derrière la flèche |
+**Tout tient à une seule adresse : `/`.** On y arrive sur la page d'entrée ; la flèche
+découvre le portfolio sans jamais changer d'URL, comme la chaîne d'origine
+(magalicontrino.com → magalicontrino.webflow.io), mais d'un seul tenant.
 
-Les pages à reconstruire viendront à côté — `/photo/`, `/web/`, `/infos/` — ce qui reproduit
+| Fichier | Origine | Rôle |
+|---|---|---|
+| `index.html` | — | La seule adresse. Assemble les deux étages ci-dessous. |
+| `entree/` | magalicontrino.com (Carrd) | Page d'entrée : photo de fond, logo, flèche |
+| `accueil/` | magalicontrino.webflow.io (Webflow) | Accueil du portfolio, derrière la flèche |
+
+Chaque étage garde son propre document, et `index.html` les superpose. Ce n'est pas un
+détail d'implémentation gratuit : les deux définissent chacun leurs règles `html`/`body`,
+et les fusionner décalerait la mise en page — les tailles en `rem` dépendent du
+`font-size` racine, que la page d'entrée redéfinit à chaque palier. Les documents isolés
+préservent au pixel près la géométrie vérifiée ci-dessous.
+
+Les pages à reconstruire viendront à côté — `photo/`, `web/`, `infos/` — ce qui reproduit
 la structure du site Webflow, où elles sont voisines de l'accueil.
 
 ## Mise en ligne (GitHub Pages)
