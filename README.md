@@ -114,8 +114,14 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
 - **Révélations au scroll** : le bas de page apparaît en 1 s à l'entrée dans le viewport.
   Aucune interaction d'origine ne cible ces éléments par identifiant : la durée est une
   approximation raisonnable, pas une valeur relevée.
-- **Non repris** : le scroll lissé (luxy.js) et les transitions entre pages. Les deux se
-  voient à l'usage.
+- **Scroll inertiel (luxy.js)** : repris. La bibliothèque d'origine (luxy.js v0.1.0, MIT,
+  Mineo Okuda) est embarquée en local plutôt qu'appelée sur un CDN, et initialisée avec les
+  mêmes réglages (`wrapperSpeed: 0.065`, désactivé sur mobile). Comme sur le site d'origine,
+  elle ne s'applique qu'aux trois pages qui portent `#luxy` : `photo/`, `web/`, `infos/`.
+- **Transitions entre pages** : le site d'origine embarque le script d'une transition en
+  volet, mais **aucun élément ne porte la classe `transition-trigger`** qu'il attend, et le
+  volet (`.whipe-intro`) vit dans un bloc en `display: none`. Vérifié sur le site en ligne :
+  le script tourne à vide, il ne se passe rien. Ne rien reproduire est donc fidèle.
 - Le lien du menu vers `/webdesign` est neutralisé : cette page renvoie **déjà un 404 sur le
   site d'origine**.
 - Deux images (`arrow.svg`, `MacBook.png`) empruntées par les pages projet à d'autres sites
@@ -123,8 +129,9 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
   donc ici aussi. Leur URL est laissée telle quelle.
 - Une partie des photos vit sur un second site (`magalicontrinophotographie.webflow.io`),
   vers lequel le mégamenu pointe encore.
-- Le favicon, l'apple-touch-icon et l'image de partage sont référencés par le site
-  d'origine mais renvoient un 404 : références retirées plutôt que reproduites.
+- Page d'entrée : son favicon, son apple-touch-icon et son image de partage sont référencés
+  par le site d'origine mais renvoient un 404 — références retirées plutôt que reproduites.
+  Le portfolio, lui, a bien son favicon : il est repris et servi en local.
 - Le lien de contact pointe vers `https://magalicontrino@hotmail.fr`, une coquille du site
   d'origine (ce devrait être un `mailto:`). Conservée telle quelle.
 - En mobile, le bloc de la page d'entrée n'est pas centré exactement : il retombe 19 px
