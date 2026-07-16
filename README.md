@@ -112,9 +112,10 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
   (`rgb(28,26,26)`). Sans ça, deux des trois barres restent invisibles.
 - Le voile légendé des cartes de projet (`.card-hover-2`) n'est masqué que par le moteur,
   pas par le CSS. Sans ça, il recouvre les photos en permanence.
-- « Projets photo » / « Projets webdesign » (`.txt-vertical-intro-top`) **gardent** leur
-  décalage de départ (−112 px / −160 px) et restent hors cadre à gauche : le site d'origine
-  ne les ramène jamais à zéro.
+- « Projets photo » / « Projets webdesign » (`.txt-vertical-intro-top`) démarrent hors cadre
+  à gauche (−112 px / −160 px) et **entrent au survol de leur colonne** (500 ms), puis
+  repartent un peu plus loin qu'ils n'étaient venus (−120 px / −170 px). L'intro du
+  chargement, elle, ne les ramène pas : seul le survol le fait.
 
 ## Comment c'est construit
 
@@ -124,7 +125,9 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
   réellement, plus un `@font-face` local pour *Unigeo 64 Variable Trial* (la police de tout
   le site, graisses 100–820).
 - **JS** : interactions réécrites à la main d'après les données du moteur d'origine, avec
-  ses durées et ses courbes. Deux modules font exception — la **visionneuse** des galeries
+  ses durées et ses courbes — intro, révélations et parallaxes au scroll, survols des
+  colonnes du hero et des cartes, traits qui se rétractent, icônes sociales, accordéon de
+  la FAQ, cartes retournables. Deux modules font exception — la **visionneuse** des galeries
   et le **carrousel** des pages projet : le runtime Webflow d'origine est rejoué tel quel,
   en local, sur les seules pages concernées. Sans `data-wf-page`, son moteur d'animations
   reste inerte et n'entre pas en conflit avec `app.js`. Le HTML porte déjà, élément par élément, l'état de départ de

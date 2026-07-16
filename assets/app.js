@@ -284,6 +284,130 @@
   }
 
   /* ---------------------------------------------------------
+     Colonnes du hero : « Projets photo » / « Projets webdesign »
+     glissent depuis la gauche au survol de leur colonne, puis
+     repartent un peu plus loin qu'ils n'étaient venus.
+     --------------------------------------------------------- */
+  function headerLinks() {
+    $$('.link-header-txt').forEach(function (link) {
+      var top = $('.txt-vertical-intro-top', link);
+      if (!top) return;
+      // Deux variantes dans les données d'origine, distinguées par leur
+      // position de départ : -112 px (entrée easeIn) et -160 px (easeOut).
+      var m = /translate3d\((-?[\d.]+)px/.exec(top.getAttribute('style') || '');
+      var start = m ? parseFloat(m[1]) : -112;
+      var isA = start > -140;
+      var outX = isA ? -120 : -170;
+
+      link.addEventListener('mouseenter', function () {
+        animate(top, { transform: 'translateX(0px)' },
+          { duration: 500, easing: isA ? 'easeIn' : 'easeOut' });
+      });
+      link.addEventListener('mouseleave', function () {
+        animate(top, { transform: 'translateX(' + outX + 'px)' },
+          { duration: 500, easing: 'easeOut' });
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     FAQ : survol, puis ouverture/fermeture au clic
+     --------------------------------------------------------- */
+  function faqs() {
+    $$('.faqs_item').forEach(function (item) {
+      var q = $('.faqs_question', item);
+      var icon = $('.faqs_top-icon', item);
+      var lineV = $('.faqs_top-icon-line-v', item);
+      var bottom = $('.faqs_item-bottom', item);
+      var inner = $('.faqs_item-bottom-inner', item);
+      var open = false;
+
+      if (bottom) set(bottom, { height: '0px', overflow: 'hidden' });
+      if (inner) set(inner, { transform: 'translateY(1rem) scale(0.96)' });
+
+      function hover(on) {
+        if (q) animate(q, { transform: 'translateX(' + (on ? '1rem' : '0rem') + ')' }, { duration: 400, easing: 'outQuart' });
+        if (icon) animate(icon, { transform: 'translateX(' + (on ? '-1rem' : '0rem') + ')' }, { duration: 400, easing: 'outQuart' });
+        // Le trait vertical de l'icône disparaît : le « + » devient « − ».
+        if (lineV) animate(lineV, { height: on ? '0rem' : '1rem' }, { duration: 400, easing: 'outQuart' });
+      }
+      item.addEventListener('mouseenter', function () { hover(true); });
+      item.addEventListener('mouseleave', function () { hover(false); });
+
+      item.addEventListener('click', function () {
+        open = !open;
+        if (!bottom || !inner) return;
+        if (open) {
+          // Une transition vers `auto` n'anime pas : on passe par la hauteur
+          // mesurée, puis on rend la main à `auto` une fois arrivé.
+          animate(bottom, { height: inner.scrollHeight + 'px' }, { duration: 500, easing: 'outQuart' });
+          animate(inner, { transform: 'translateY(0rem) scale(1)' }, { duration: 500, easing: 'outQuart' });
+          setTimeout(function () { if (open) bottom.style.height = 'auto'; }, 500);
+        } else {
+          bottom.style.height = bottom.offsetHeight + 'px';
+          void bottom.offsetWidth;
+          animate(bottom, { height: '0px' }, { duration: 500, easing: 'outQuart' });
+          animate(inner, { transform: 'translateY(1rem) scale(0.96)' }, { duration: 500, easing: 'outQuart' });
+        }
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     Cartes retournables (/infos) et vignette qui s'ouvre au survol
+     --------------------------------------------------------- */
+  function flipcards() {
+    $$('.text-wrapper-5').forEach(function (w) {
+      var wrap = w.closest('.flipcard-wrapper');
+      var img = $('.img-parent', w) || $('.img-parent', w.parentElement || w);
+
+      if (img) {
+        set(img, { width: '0em', overflow: 'hidden' });
+        w.addEventListener('mouseenter', function () {
+          animate(img, { width: '4em' }, { duration: 600, easing: 'inOutQuart' });
+        });
+        w.addEventListener('mouseleave', function () {
+          animate(img, { width: '0em' }, { duration: 400, easing: 'inOutQuart' });
+        });
+      }
+      if (wrap) {
+        w.addEventListener('click', function () {
+          animate(wrap, { transform: 'rotateY(180deg)' }, { duration: 400, easing: 'ease' });
+        });
+      }
+    });
+    $$('.flipcard-back').forEach(function (b) {
+      var wrap = b.closest('.flipcard-wrapper');
+      if (!wrap) return;
+      b.addEventListener('click', function () {
+        animate(wrap, { transform: 'rotateY(360deg)' }, { duration: 400, easing: 'ease' });
+        // Le tour complet fini, on revient à 0 sans animation : la carte est
+        // de nouveau face avant, prête à repartir.
+        setTimeout(function () { set(wrap, { transform: 'rotateY(0deg)' }); }, 400);
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     Suivi discret de la souris (±10 px)
+     --------------------------------------------------------- */
+  function mouseFollow() {
+    $$('.link-block-5').forEach(function (el) {
+      if (reduce) return;
+      el.addEventListener('mousemove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = ((e.clientX - r.left) / r.width - 0.5) * 20;
+        var y = ((e.clientY - r.top) / r.height - 0.5) * 20;
+        el.style.transition = 'transform 500ms linear';
+        el.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px)';
+      });
+      el.addEventListener('mouseleave', function () {
+        el.style.transform = 'translate(0px, 0px)';
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
      Curseur : grossit au survol des liens du menu
      --------------------------------------------------------- */
   function cursor() {
@@ -338,6 +462,10 @@
     bigLines();
     tutButtons();
     cardHovers();
+    headerLinks();
+    faqs();
+    flipcards();
+    mouseFollow();
     cursor();
     scrollReveals();
     parallax();
