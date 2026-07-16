@@ -201,40 +201,35 @@
 
   /* ---------------------------------------------------------
      Mégamenu
+
+     ATTENTION — comportement volontairement reproduit tel quel.
+     Sur le site d'origine, le mégamenu NE S'OUVRE PAS : le bouton
+     hamburger (#open) ne porte aucun `data-w-id`, donc aucune
+     interaction n'y est rattachée. Le seul effet du clic est le
+     script d'origine qui bascule le défilement de la page — ce qui
+     le bloque sans rien afficher. Vérifié sur le site en ligne, en
+     desktop comme en mobile, avec un vrai clic souris.
+
+     Le menu reste donc masqué, comme chez l'original. Pour le rendre
+     fonctionnel, il faudrait rattacher l'ouverture au bouton : c'est
+     une correction du site d'origine, pas une réplication.
      --------------------------------------------------------- */
   function megamenu() {
     var trigger = document.getElementById('open');
     var menu = $('.navmenu');
-    if (!trigger || !menu) return;
-    var open = false;
 
-    menu.style.display = 'none';
-    menu.style.opacity = '0';
-
-    // Le moteur d'origine peint les barres du hamburger dès le chargement,
-    // avec l'état de repos de l'interaction de fermeture — le CSS seul les
-    // laisserait transparentes.
+    // Le moteur d'origine applique ces états au chargement ; le CSS seul
+    // laisserait le menu visible et les barres du hamburger transparentes.
+    if (menu) set(menu, { display: 'none', opacity: '0' });
     $$('.hamburger-line-top, .hamburger-line-middle, .hamburger-line-bottom')
       .forEach(function (l) { l.style.backgroundColor = 'rgb(28, 26, 26)'; });
 
-    function close() {
-      open = false;
-      document.body.style.overflow = 'auto';
-      animate(menu, { opacity: '0' }, { duration: 800, easing: 'ease' });
-      setTimeout(function () { if (!open) menu.style.display = 'none'; }, 800);
-    }
-
+    if (!trigger) return;
+    var clicks = 0;
     trigger.addEventListener('click', function (e) {
       e.preventDefault();
-      if (open) return close();
-      open = true;
-      document.body.style.overflow = 'hidden';
-      menu.style.display = 'block';
-      animate(menu, { opacity: '1' }, { duration: 600, easing: 'ease' });
-    });
-
-    $$('.navlink, .contact-big, .contact-big-mobile', menu).forEach(function (a) {
-      a.addEventListener('click', close);
+      clicks += 1;
+      document.body.style.overflow = (clicks % 2 === 0) ? 'auto' : 'hidden';
     });
   }
 

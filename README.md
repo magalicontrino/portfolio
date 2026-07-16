@@ -152,6 +152,12 @@ Trois comportements non évidents, découverts en comparant et reproduits tels q
   volet, mais **aucun élément ne porte la classe `transition-trigger`** qu'il attend, et le
   volet (`.whipe-intro`) vit dans un bloc en `display: none`. Vérifié sur le site en ligne :
   le script tourne à vide, il ne se passe rien. Ne rien reproduire est donc fidèle.
+- **Le mégamenu ne s'ouvre pas** — et c'est fidèle. Sur le site d'origine, le bouton
+  hamburger ne porte aucun `data-w-id` : aucune interaction n'y est rattachée. Le seul effet
+  du clic est le script d'origine qui bascule le défilement, ce qui **bloque la page sans
+  rien afficher**. Vérifié en ligne, desktop et mobile, avec un vrai clic. Le menu était
+  conçu pour s'ouvrir (l'interaction de fermeture existe, elle) mais son déclencheur n'a
+  jamais été relié. La navigation passe donc par les liens de la page.
 - Le lien du menu vers `/webdesign` est neutralisé : cette page renvoie **déjà un 404 sur le
   site d'origine**.
 - Deux images (`arrow.svg`, `MacBook.png`) empruntées par les pages projet à d'autres sites
