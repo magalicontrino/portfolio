@@ -244,14 +244,19 @@
     if (!trigger || !menu) return;
     var open = false;
 
+    // Les trois barres se rejoignent au centre et se croisent.
+    // L'écart entre le centre d'une barre extrême et celui du milieu vaut
+    // la demi-hauteur des deux (0,15 rem chacune) plus la marge (0,375 rem).
+    var VERS_CENTRE = '0.675rem';
+
     function openMenu() {
       open = true;
       document.body.style.overflow = 'hidden';
       menu.style.display = 'block';
       animate(menu, { opacity: '1' }, { duration: 100, easing: 'ease' });
-      animate(top, { transform: 'translateX(-100px)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
-      animate(bot, { transform: 'translateX(100px)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
-      animate(mid, { backgroundColor: 'rgb(51, 51, 51)' }, { duration: 500, easing: 'ease' });
+      animate(top, { transform: 'translateY(' + VERS_CENTRE + ') rotate(45deg)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
+      animate(bot, { transform: 'translateY(-' + VERS_CENTRE + ') rotate(-45deg)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
+      animate(mid, { opacity: '0' }, { duration: 200, easing: 'ease' });
       if (navbar) animate(navbar, { backgroundColor: NOIR }, { duration: 500, easing: 'ease' });
       trigger.setAttribute('aria-expanded', 'true');
     }
@@ -261,9 +266,9 @@
       open = false;
       document.body.style.overflow = 'auto';
       animate(menu, { opacity: '0' }, { duration: 800, easing: 'ease' });
-      animate(top, { transform: 'translateX(0px)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
-      animate(bot, { transform: 'translateX(0px)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
-      animate(mid, { backgroundColor: NOIR }, { duration: 200, easing: 'ease' });
+      animate(top, { transform: 'translateY(0) rotate(0deg)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
+      animate(bot, { transform: 'translateY(0) rotate(0deg)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
+      animate(mid, { opacity: '1', backgroundColor: NOIR }, { duration: 400, delay: 200, easing: 'ease' });
       if (navbar) animate(navbar, { backgroundColor: BLANC }, { duration: 600, easing: 'ease' });
       trigger.setAttribute('aria-expanded', 'false');
       setTimeout(function () { if (!open) menu.style.display = 'none'; }, 800);
@@ -332,6 +337,77 @@
         inner.style.transition = tr;
         inner.style.transform = 'translate(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px)';
       });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     Transition entre les pages
+
+     ÉCART ASSUMÉ : le site d'origine embarque le script d'une
+     transition en volet, mais aucun élément ne porte la classe
+     `transition-trigger` qu'il attend — elle ne s'exécute jamais.
+     Le panneau qu'elle devait animer existe pourtant : `.preload-2`,
+     plein écran, `#0f0f0f`, prévu pour glisser en 1500 ms `inOutQuad`.
+
+     On rebranche ce volet, avec sa couleur et sa courbe : il balaie
+     l'écran vers la gauche en continu — il entre au clic, et repart
+     dans le même sens au chargement de la page suivante.
+     --------------------------------------------------------- */
+  var VOLET_ENTREE = 620;  // clic -> écran couvert
+  var VOLET_SORTIE = 900;  // page chargée -> écran découvert
+
+  function volet() {
+    var v = document.createElement('div');
+    v.className = 'volet-transition';
+    v.setAttribute('aria-hidden', 'true');
+    v.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0f0f0f;' +
+      'pointer-events:none;transform:translateX(0%);will-change:transform';
+    document.body.appendChild(v);
+
+    // Au chargement : le volet découvre la page en poursuivant sa course.
+    // Surtout pas de requestAnimationFrame ici : il ne tourne pas dans un onglet
+    // d'arrière-plan, et le volet resterait sur un écran noir jusqu'au retour du
+    // visiteur. Un timer, lui, tourne toujours.
+    setTimeout(function () {
+      v.style.transition = 'transform ' + (reduce ? 0 : VOLET_SORTIE) + 'ms cubic-bezier(0.455, 0.03, 0.515, 0.955)';
+      v.style.transform = 'translateX(-100%)';
+    }, 0);
+
+    // Filet de sécurité : quoi qu'il arrive, le volet dégage. Mieux vaut une
+    // transition ratée qu'une page noire.
+    setTimeout(function () {
+      v.style.transition = 'none';
+      v.style.transform = 'translateX(-100%)';
+    }, VOLET_SORTIE + 800);
+
+    if (reduce) return;
+
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a');
+      if (!a) return;
+      var href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#' || a.target === '_blank') return;
+      // Liens externes et mailto : on laisse le navigateur faire.
+      if (a.hostname && a.hostname !== location.hostname) return;
+      if (/^(mailto|tel):/.test(href)) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+
+      e.preventDefault();
+      // Le volet revient par la droite et couvre l'écran avant de naviguer.
+      v.style.transition = 'none';
+      v.style.transform = 'translateX(100%)';
+      void v.offsetWidth;
+      v.style.transition = 'transform ' + VOLET_ENTREE + 'ms cubic-bezier(0.455, 0.03, 0.515, 0.955)';
+      v.style.transform = 'translateX(0%)';
+      setTimeout(function () { location.href = a.href; }, VOLET_ENTREE);
+    }, true);
+
+    // Retour arrière depuis le cache : le volet doit être retiré.
+    addEventListener('pageshow', function (ev) {
+      if (ev.persisted) {
+        v.style.transition = 'none';
+        v.style.transform = 'translateX(-100%)';
+      }
     });
   }
 
@@ -584,6 +660,7 @@
     tutButtons();
     cardHovers();
     ancresVides();
+    volet();
     contenuDifferé();
     titresVariables();
     headerLinks();
