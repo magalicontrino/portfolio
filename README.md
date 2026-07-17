@@ -153,8 +153,9 @@ verticales mais sont horizontales dans leur propre repère, et se rejoignent don
 en Y. Ce même conteneur ne fait que 26 px de haut et rogne ce qui déborde : une
 barre de 48 px pivotée à 45° en occupe 37, il faut lever le rognage à l'ouverture.
 Enfin le blanc de la barre est peint par `.nav-container`, pas par `.navbar-2` qui
-est dessous : c'est `.nav-container` qu'il faut assombrir, sinon la croix blanche
-reste blanche sur blanc.
+est dessous — à savoir si un jour la barre devait changer de couleur. Ce n'est pas
+le cas : la barre reste blanche et la croix est noire, réglée par la seule
+constante `CROIX` (300 ms) dans `megamenu()`.
 | **Ancres vides** (`<a href="#">`) | Webflow s'en sert comme accroche à clic (FAQ, bouton « les tarifs ici », cartes) : suivre l'ancre renvoyait le navigateur **en haut de page** | Navigation neutralisée pour les seuls `href="#"`. Les vraies ancres (`#nav`, retour en haut) fonctionnent toujours |
 
 Le mégamenu mérite un mot. Ses interactions d'ouverture **existent** dans le projet Webflow

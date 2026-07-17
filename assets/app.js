@@ -236,10 +236,6 @@
   function megamenu() {
     var trigger = document.getElementById('open');
     var menu = $('.navmenu');
-    // C'est .nav-container qui porte le blanc opaque et recouvre .navbar-2 :
-    // assombrir .navbar-2 seul ne se voit pas, et la croix, passée au blanc,
-    // resterait blanche sur blanc.
-    var navbar = $('.nav-container') || $('.navbar-2');
     var top = $('.hamburger-line-top');
     var mid = $('.hamburger-line-middle');
     var bot = $('.hamburger-line-bottom');
@@ -263,16 +259,19 @@
     // croix est coupée et il n'en reste qu'une tranche.
     var boite = trigger.querySelector('.nav-button-hamburger');
 
+    // Les barres gardent leur noir et le fond de la barre ne bouge pas : seul
+    // le pivotement change. Un seul réglage pour la vitesse de la croix.
+    var CROIX = 300;
+
     function openMenu() {
       open = true;
       document.body.style.overflow = 'hidden';
       if (boite) boite.style.overflow = 'visible';
       menu.style.display = 'block';
       animate(menu, { opacity: '1' }, { duration: 100, easing: 'ease' });
-      animate(top, { transform: 'translateY(' + VERS_CENTRE + ') rotate(45deg)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
-      animate(bot, { transform: 'translateY(-' + VERS_CENTRE + ') rotate(-45deg)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
-      animate(mid, { opacity: '0' }, { duration: 200, easing: 'ease' });
-      if (navbar) animate(navbar, { backgroundColor: NOIR }, { duration: 500, easing: 'ease' });
+      animate(top, { transform: 'translateY(' + VERS_CENTRE + ') rotate(45deg)' }, { duration: CROIX, easing: 'outQuart' });
+      animate(bot, { transform: 'translateY(-' + VERS_CENTRE + ') rotate(-45deg)' }, { duration: CROIX, easing: 'outQuart' });
+      animate(mid, { opacity: '0' }, { duration: 150, easing: 'ease' });
       trigger.setAttribute('aria-expanded', 'true');
     }
 
@@ -281,10 +280,9 @@
       open = false;
       document.body.style.overflow = 'auto';
       animate(menu, { opacity: '0' }, { duration: 800, easing: 'ease' });
-      animate(top, { transform: 'translateY(0) rotate(0deg)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
-      animate(bot, { transform: 'translateY(0) rotate(0deg)', backgroundColor: NOIR }, { duration: 600, easing: 'outQuart' });
-      animate(mid, { opacity: '1', backgroundColor: NOIR }, { duration: 400, delay: 200, easing: 'ease' });
-      if (navbar) animate(navbar, { backgroundColor: BLANC }, { duration: 600, easing: 'ease' });
+      animate(top, { transform: 'translateY(0) rotate(0deg)' }, { duration: CROIX, easing: 'outQuart' });
+      animate(bot, { transform: 'translateY(0) rotate(0deg)' }, { duration: CROIX, easing: 'outQuart' });
+      animate(mid, { opacity: '1' }, { duration: 200, delay: 100, easing: 'ease' });
       trigger.setAttribute('aria-expanded', 'false');
       // Le rognage ne revient qu'une fois les barres redressées, sinon on les
       // verrait se faire couper en cours de route.
