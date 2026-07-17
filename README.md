@@ -27,6 +27,16 @@ préservent au pixel près la géométrie vérifiée ci-dessous.
 
 **Le site est complet : 21 pages**, soit tout le site Webflow d'origine.
 
+## Écarts volontaires avec le site d'origine
+
+À partir d'ici, le site n'est plus une réplique stricte : ce sont des choix de
+contenu demandés, à ne pas « corriger » en les comparant au site live.
+
+| Page | Écart | Pourquoi |
+|---|---|---|
+| `/web` | « Webflow » et son logo retirés du titre | compétences élargies, l'outil n'a plus à être nommé |
+| `/web` | « de site » passé en fin (`.text-span-35`) sur les deux lignes | l'alternance gras/fin devient régulière sur les quatre lignes |
+
 ## Mise en ligne (GitHub Pages)
 
 Le site est statique : aucun build, aucun workflow. Il suffit de servir le dépôt tel quel.
