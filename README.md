@@ -188,6 +188,13 @@ Les durées de transition, une constante par réglage :
 chargée → écran découvert) dans `volet()` ; `CROIX` (300 ms), `MENU_ARRIVEE`
 (1300 ms) et `MENU_FERME` (800 ms) dans `megamenu()`.
 
+Attention aux **deux arrivées qui se superposent** : `/photo`, `/web` et `/infos`
+ont un pré-chargeur Webflow (`.preload-2`) qui glisse pendant 1500 ms au
+chargement. Arrivé depuis le menu, c'est le menu la transition — le pré-chargeur
+rejouerait une seconde arrivée par-dessus son fondu. Il est donc écarté d'emblée
+dans ce cas, et conservé tel quel à l'arrivée normale. `/accueil` n'en a pas :
+c'est pour ça que lui seul paraissait juste avant ce correctif.
+
 `closeMenu()` sert deux gestes qui n'ont pas la même intention, d'où les deux
 durées : à l'arrivée le menu découvre la page suivante, c'est un moment à voir
 passer ; à la croix on veut seulement sortir du menu, et ça ne doit pas se faire

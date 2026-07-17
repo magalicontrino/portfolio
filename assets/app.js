@@ -493,12 +493,19 @@
      vide sous son titre — c'est ce qui arrivait ici.
      --------------------------------------------------------- */
   function contenuDifferé() {
+    // Arrivée depuis le menu : c'est lui, la transition. Le pré-chargeur de la
+    // page jouerait une seconde arrivée par-dessus le fondu du menu — deux
+    // animations qui se marchent dessus. /accueil n'a pas de `.preload-2`,
+    // c'est pour ça que lui seul paraissait juste.
+    var presse = reduce || ARRIVE_PAR_LE_MENU;
+
     $$('.wrap-home').forEach(function (el) {
       if (getComputedStyle(el).display !== 'none') return;
-      setTimeout(function () { el.style.display = 'block'; }, reduce ? 0 : 500);
+      setTimeout(function () { el.style.display = 'block'; }, presse ? 0 : 500);
     });
     // Le voile d'intro se retire vers la gauche pendant ce temps.
     $$('.preload-2').forEach(function (el) {
+      if (presse) { set(el, { transform: 'translateX(-100%)' }); return; }
       animate(el, { transform: 'translateX(-100%)' }, { duration: 1500, easing: 'inOutQuad' });
     });
   }
