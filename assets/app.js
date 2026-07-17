@@ -293,8 +293,12 @@
     // le pivotement change. Un seul réglage pour la vitesse de la croix.
     var CROIX = 300;
 
-    // Durée du fondu du menu — celui qui découvre la page suivante à l'arrivée.
-    var MENU_SORTIE = 800;
+    // Deux fondus, deux intentions.
+    // À l'arrivée, le menu découvre la page suivante : c'est un moment à voir
+    // passer, on prend son temps.
+    var MENU_ARRIVEE = 1300;
+    // À la croix, on veut juste sortir du menu : ça ne doit pas se faire attendre.
+    var MENU_FERME = 800;
 
     function openMenu() {
       open = true;
@@ -308,11 +312,12 @@
       trigger.setAttribute('aria-expanded', 'true');
     }
 
-    function closeMenu() {
+    function closeMenu(fondu) {
       if (!open) return;
+      fondu = fondu || MENU_FERME;
       open = false;
       document.body.style.overflow = 'auto';
-      animate(menu, { opacity: '0' }, { duration: MENU_SORTIE, easing: 'ease' });
+      animate(menu, { opacity: '0' }, { duration: fondu, easing: 'ease' });
       animate(top, { transform: 'translateY(0) rotate(0deg)' }, { duration: CROIX, easing: 'outQuart' });
       animate(bot, { transform: 'translateY(0) rotate(0deg)' }, { duration: CROIX, easing: 'outQuart' });
       animate(mid, { opacity: '1' }, { duration: 200, delay: 100, easing: 'ease' });
@@ -323,7 +328,7 @@
         if (open) return;
         menu.style.display = 'none';
         if (boite) boite.style.overflow = '';
-      }, MENU_SORTIE);
+      }, fondu);
     }
 
     trigger.setAttribute('aria-expanded', 'false');
@@ -344,7 +349,7 @@
       document.body.style.overflow = 'hidden';
       // Un timer, jamais requestAnimationFrame : dans un onglet d'arrière-plan
       // celui-ci ne tourne pas et le menu resterait collé sur la page.
-      setTimeout(closeMenu, 60);
+      setTimeout(function () { closeMenu(MENU_ARRIVEE); }, 60);
     }
 
     // Un lien du menu laisse le menu en place et le navigateur naviguer : il

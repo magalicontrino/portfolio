@@ -183,10 +183,15 @@ moindre avertissement, et le geste paraît lourd. `inOutQuart` et `easeOut` y
 manquaient — vérifier qu'un `easing:` demandé existe bien avant de conclure
 qu'une animation est « trop lente ».
 
-Les quatre durées de transition, une par réglage :
+Les durées de transition, une constante par réglage :
 `FONDU_ENTREE` (850 ms, clic → écran couvert) et `FONDU_SORTIE` (1100 ms, page
-chargée → écran découvert) dans `volet()` ; `CROIX` (300 ms) et `MENU_SORTIE`
-(800 ms) dans `megamenu()`.
+chargée → écran découvert) dans `volet()` ; `CROIX` (300 ms), `MENU_ARRIVEE`
+(1300 ms) et `MENU_FERME` (800 ms) dans `megamenu()`.
+
+`closeMenu()` sert deux gestes qui n'ont pas la même intention, d'où les deux
+durées : à l'arrivée le menu découvre la page suivante, c'est un moment à voir
+passer ; à la croix on veut seulement sortir du menu, et ça ne doit pas se faire
+attendre.
 
 **Trois pièges de cette barre de navigation**, notés pour la prochaine fois :
 `.nav-button-hamburger` porte un `rotate(90deg)` en CSS — les barres paraissent
