@@ -15,12 +15,16 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
+  /* Une courbe absente d'ici retombe en « linear » sans rien dire : le geste
+     perd son élan et paraît lourd. inOutQuart et easeOut manquaient. */
   var EASE = {
     outQuad: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     inOutQuad: 'cubic-bezier(0.455, 0.03, 0.515, 0.955)',
     outQuart: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+    inOutQuart: 'cubic-bezier(0.77, 0, 0.175, 1)',
     outQuint: 'cubic-bezier(0.23, 1, 0.32, 1)',
     easeIn: 'cubic-bezier(0.42, 0, 1, 1)',
+    easeOut: 'cubic-bezier(0, 0, 0.58, 1)',
     ease: 'ease'
   };
 
@@ -618,6 +622,11 @@
       wrap.style.perspective = '1000px';
     });
 
+    // Bouton « les tarifs ici » : l'espace qui s'ouvre au survol. Le geste doit
+    // suivre la souris, pas se faire attendre — d'où ces durées courtes.
+    var BOUTON_OUVRE = 350;
+    var BOUTON_FERME = 250;
+
     $$('.text-wrapper-5').forEach(function (w) {
       var wrap = w.closest('.flipcard-wrapper');
       var img = $('.img-parent', w) || $('.img-parent', w.parentElement || w);
@@ -625,10 +634,10 @@
       if (img) {
         set(img, { width: '0em', overflow: 'hidden' });
         w.addEventListener('mouseenter', function () {
-          animate(img, { width: '4em' }, { duration: 600, easing: 'inOutQuart' });
+          animate(img, { width: '4em' }, { duration: BOUTON_OUVRE, easing: 'inOutQuart' });
         });
         w.addEventListener('mouseleave', function () {
-          animate(img, { width: '0em' }, { duration: 400, easing: 'inOutQuart' });
+          animate(img, { width: '0em' }, { duration: BOUTON_FERME, easing: 'inOutQuart' });
         });
       }
       if (wrap) {

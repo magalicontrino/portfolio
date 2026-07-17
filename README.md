@@ -162,7 +162,15 @@ site fonctionne, au prix d'un écart documenté avec l'original.
   blanc sur ce chemin : il masquerait le fondu du menu.
 - *ailleurs sur la page* — le fondu au blanc.
 
-Les quatre durées, une par réglage :
+Le bouton « les tarifs ici » ouvre son espace en `BOUTON_OUVRE` (350 ms) et le
+referme en `BOUTON_FERME` (250 ms), dans `flipcards()`.
+
+Attention à la table `EASE` : une courbe absente y retombe en `linear` sans le
+moindre avertissement, et le geste paraît lourd. `inOutQuart` et `easeOut` y
+manquaient — vérifier qu'un `easing:` demandé existe bien avant de conclure
+qu'une animation est « trop lente ».
+
+Les quatre durées de transition, une par réglage :
 `FONDU_ENTREE` (850 ms, clic → écran couvert) et `FONDU_SORTIE` (1100 ms, page
 chargée → écran découvert) dans `volet()` ; `CROIX` (300 ms) et `MENU_SORTIE`
 (800 ms) dans `megamenu()`.
