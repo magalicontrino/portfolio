@@ -144,8 +144,18 @@ site fonctionne, au prix d'un écart documenté avec l'original.
 | **Hamburger** | L'animation d'origine écarte les barres hors du cadre : il n'en reste qu'une, illisible | Les trois barres se **croisent** : ±45°, la médiane s'efface |
 | **Transition entre pages** | Le script d'une transition en volet est présent mais aucun élément ne porte la classe `transition-trigger` qu'il attend : elle ne s'exécute jamais | Un **fondu au blanc** : 850 ms au clic, 1100 ms au chargement. Blanc plutôt que noir — c'est la couleur du volet prévu à l'origine (`.whipe-intro`), et un flash sombre serait dur sur un site clair |
 
-Pour régler la transition, deux constantes en haut de `volet()` dans `app.js` suffisent :
-`FONDU_ENTREE` (clic → écran couvert) et `FONDU_SORTIE` (page chargée → écran découvert).
+**Deux transitions différentes**, selon d'où part le clic :
+
+- *depuis le menu* — le menu reste en place pendant que la page suivante charge
+  derrière lui, puis s'efface en fondu pour la découvrir. Le passage tient dans
+  un drapeau `sessionStorage`, posé au clic et consommé à l'arrivée. Aucun voile
+  blanc sur ce chemin : il masquerait le fondu du menu.
+- *ailleurs sur la page* — le fondu au blanc.
+
+Les quatre durées, une par réglage :
+`FONDU_ENTREE` (850 ms, clic → écran couvert) et `FONDU_SORTIE` (1100 ms, page
+chargée → écran découvert) dans `volet()` ; `CROIX` (300 ms) et `MENU_SORTIE`
+(800 ms) dans `megamenu()`.
 
 **Trois pièges de cette barre de navigation**, notés pour la prochaine fois :
 `.nav-button-hamburger` porte un `rotate(90deg)` en CSS — les barres paraissent

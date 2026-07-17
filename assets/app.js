@@ -49,9 +49,9 @@
   // Ramène un élément à son état final : plus de décalage, pleine opacité.
   function settle(el, opts) {
     if (!el) return;
-    // Le voile de transition n'appartient pas à la page : il ne doit jamais
-    // être « remis à l'état final », sinon il recouvre tout.
-    if (el.classList && el.classList.contains('volet-transition')) return;
+    // Le voile de transition et le menu n'appartiennent pas à la page : les
+    // « remettre à l'état final » les ferait recouvrir tout l'écran.
+    if (el.matches && el.matches('.volet-transition, .navmenu')) return;
     var props = { transform: 'translate3d(0px, 0px, 0px)' };
     if (el.style.opacity !== '' && el.style.opacity !== '1') props.opacity = '1';
     // Les préfixes inline d'origine gagneraient sur notre transform.
@@ -146,10 +146,12 @@
 
     // Le reste des éléments encore figés sur leur état de départ.
     var heroSel = HERO.map(function (g) { return g.sel; }).join(', ') + ', .tut-parent, .tut-parent-phone, ' + FROZEN;
-    // Le voile de transition porte lui aussi une opacité en ligne : sans
-    // l'écarter, settle() le rallume à 1 et la page reste blanche pour de bon.
+    // Le voile de transition et le menu portent eux aussi une opacité en ligne,
+    // mais ne sont pas des éléments de la page : sans les écarter, settle() les
+    // rallume à 1 — la page reste blanche, ou le menu reste collé dessus.
+    var horsPage = '.volet-transition, .navmenu';
     var pending = $$('[style*="translate3d"], [style*="opacity"]').filter(function (el) {
-      return !el.matches(heroSel) && !el.matches('.volet-transition') && handled.indexOf(el) === -1;
+      return !el.matches(heroSel) && !el.matches(horsPage) && handled.indexOf(el) === -1;
     });
     if (!pending.length) return;
     if (reduce || !('IntersectionObserver' in window)) {
@@ -233,6 +235,30 @@
   var NOIR = 'rgb(28, 26, 26)';
   var BLANC = 'rgb(255, 255, 255)';
 
+  /* Un lien qui change de page sur ce site — par opposition à une ancre, un
+     mailto, un lien externe ou une ouverture dans un nouvel onglet. */
+  function lienInterne(a, e) {
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#' || a.target === '_blank') return false;
+    if (a.hostname && a.hostname !== location.hostname) return false;
+    if (/^(mailto|tel):/.test(href)) return false;
+    if (e && (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0)) return false;
+    return true;
+  }
+
+  /* Suivre un lien du menu ne le referme pas : la nouvelle page se charge
+     derrière lui, et c'est elle qui l'efface en fondu à l'arrivée. Le passage
+     d'une page à l'autre tient dans ce drapeau, lu puis oublié aussitôt. */
+  var CLE_MENU = 'sortie-menu';
+  function marquerSortieMenu() { try { sessionStorage.setItem(CLE_MENU, '1'); } catch (err) {} }
+  var ARRIVE_PAR_LE_MENU = (function () {
+    try {
+      var v = sessionStorage.getItem(CLE_MENU) === '1';
+      sessionStorage.removeItem(CLE_MENU);
+      return v;
+    } catch (err) { return false; }
+  })();
+
   function megamenu() {
     var trigger = document.getElementById('open');
     var menu = $('.navmenu');
@@ -263,6 +289,9 @@
     // le pivotement change. Un seul réglage pour la vitesse de la croix.
     var CROIX = 300;
 
+    // Durée du fondu du menu — celui qui découvre la page suivante à l'arrivée.
+    var MENU_SORTIE = 800;
+
     function openMenu() {
       open = true;
       document.body.style.overflow = 'hidden';
@@ -279,7 +308,7 @@
       if (!open) return;
       open = false;
       document.body.style.overflow = 'auto';
-      animate(menu, { opacity: '0' }, { duration: 800, easing: 'ease' });
+      animate(menu, { opacity: '0' }, { duration: MENU_SORTIE, easing: 'ease' });
       animate(top, { transform: 'translateY(0) rotate(0deg)' }, { duration: CROIX, easing: 'outQuart' });
       animate(bot, { transform: 'translateY(0) rotate(0deg)' }, { duration: CROIX, easing: 'outQuart' });
       animate(mid, { opacity: '1' }, { duration: 200, delay: 100, easing: 'ease' });
@@ -290,7 +319,7 @@
         if (open) return;
         menu.style.display = 'none';
         if (boite) boite.style.overflow = '';
-      }, 800);
+      }, MENU_SORTIE);
     }
 
     trigger.setAttribute('aria-expanded', 'false');
@@ -299,9 +328,27 @@
       if (open) closeMenu(); else openMenu();
     });
 
-    // Suivre un lien du menu le referme (comportement d'origine).
+    // On arrive d'un lien du menu : la page a déjà changé derrière lui. On le
+    // repose tel qu'il était, puis on l'efface pour découvrir la nouvelle page.
+    if (ARRIVE_PAR_LE_MENU) {
+      set(menu, { display: 'block', opacity: '1' });
+      set(top, { transform: 'translateY(' + VERS_CENTRE + ') rotate(45deg)' });
+      set(bot, { transform: 'translateY(-' + VERS_CENTRE + ') rotate(-45deg)' });
+      set(mid, { opacity: '0' });
+      if (boite) boite.style.overflow = 'visible';
+      open = true;
+      document.body.style.overflow = 'hidden';
+      // Un timer, jamais requestAnimationFrame : dans un onglet d'arrière-plan
+      // celui-ci ne tourne pas et le menu resterait collé sur la page.
+      setTimeout(closeMenu, 60);
+    }
+
+    // Un lien du menu laisse le menu en place et le navigateur naviguer : il
+    // couvre l'écran pendant le chargement, et la page suivante l'efface.
     $$('.navlink, .contact-big, .contact-big-mobile', menu).forEach(function (a) {
-      a.addEventListener('click', closeMenu);
+      a.addEventListener('click', function (e) {
+        if (lienInterne(a, e) && !reduce) marquerSortieMenu(); else closeMenu();
+      });
     });
     // Échap : le menu couvre tout l'écran, il faut pouvoir en sortir.
     addEventListener('keydown', function (e) {
@@ -379,33 +426,39 @@
       'pointer-events:none;opacity:1;will-change:opacity';
     document.body.appendChild(v);
 
-    // Au chargement : le fondu découvre la page.
-    // Surtout pas de requestAnimationFrame ici : il ne tourne pas dans un onglet
-    // d'arrière-plan, et le voile resterait en place jusqu'au retour du visiteur.
-    // Un timer, lui, tourne toujours.
-    setTimeout(function () {
-      v.style.transition = 'opacity ' + (reduce ? 0 : FONDU_SORTIE) + 'ms ease';
-      v.style.opacity = '0';
-    }, 0);
-
-    // Filet de sécurité : quoi qu'il arrive, le voile dégage. Mieux vaut une
-    // transition ratée qu'une page masquée.
-    setTimeout(function () {
+    if (ARRIVE_PAR_LE_MENU) {
+      // C'est le menu qui couvre l'écran et qui va s'effacer : le voile n'a
+      // rien à faire ici, il masquerait son fondu. On le neutralise, mais on
+      // garde la suite — les liens de cette page méritent leur transition.
       v.style.transition = 'none';
       v.style.opacity = '0';
-    }, FONDU_SORTIE + 800);
+    } else {
+      // Au chargement : le fondu découvre la page.
+      // Surtout pas de requestAnimationFrame ici : il ne tourne pas dans un onglet
+      // d'arrière-plan, et le voile resterait en place jusqu'au retour du visiteur.
+      // Un timer, lui, tourne toujours.
+      setTimeout(function () {
+        v.style.transition = 'opacity ' + (reduce ? 0 : FONDU_SORTIE) + 'ms ease';
+        v.style.opacity = '0';
+      }, 0);
+
+      // Filet de sécurité : quoi qu'il arrive, le voile dégage. Mieux vaut une
+      // transition ratée qu'une page masquée.
+      setTimeout(function () {
+        v.style.transition = 'none';
+        v.style.opacity = '0';
+      }, FONDU_SORTIE + 800);
+    }
 
     if (reduce) return;
 
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a');
       if (!a) return;
-      var href = a.getAttribute('href');
-      if (!href || href.charAt(0) === '#' || a.target === '_blank') return;
-      // Liens externes et mailto : on laisse le navigateur faire.
-      if (a.hostname && a.hostname !== location.hostname) return;
-      if (/^(mailto|tel):/.test(href)) return;
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      // Ancres, mailto, liens externes, nouvel onglet : le navigateur s'en charge.
+      if (!lienInterne(a, e)) return;
+      // Depuis le menu ouvert, pas de voile : le menu tient déjà l'écran.
+      if (a.closest('.navmenu')) return;
 
       e.preventDefault();
       v.style.transition = 'opacity ' + FONDU_ENTREE + 'ms ease';
