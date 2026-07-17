@@ -27,6 +27,19 @@ préservent au pixel près la géométrie vérifiée ci-dessous.
 
 **Le site est complet : 21 pages**, soit tout le site Webflow d'origine.
 
+## Régénérer les pages
+
+Les 21 pages sont produites par un script, pas écrites à la main :
+
+```bash
+python3 outils/build.py
+```
+
+Le contenu d'une page se modifie dans `outils/pages/<page>.html`, puis on relance
+le script. **Éditer directement `accueil/index.html` & co. ne sert à rien** : la
+prochaine exécution écrase le changement. Les animations, elles, vivent dans
+`assets/app.js` et ne sont pas concernées. Voir `outils/README.md`.
+
 ## Écarts volontaires avec le site d'origine
 
 À partir d'ici, le site n'est plus une réplique stricte : ce sont des choix de
