@@ -341,44 +341,40 @@
   }
 
   /* ---------------------------------------------------------
-     Transition entre les pages
+     Transition entre les pages : un fondu
 
-     ÉCART ASSUMÉ : le site d'origine embarque le script d'une
-     transition en volet, mais aucun élément ne porte la classe
-     `transition-trigger` qu'il attend — elle ne s'exécute jamais.
-     Le panneau qu'elle devait animer existe pourtant : `.preload-2`,
-     plein écran, `#0f0f0f`, prévu pour glisser en 1500 ms `inOutQuad`.
+     Un simple fondu au blanc, allongé pour être perceptible. Le blanc
+     plutôt que le noir : c'est la couleur du volet prévu à l'origine
+     (`.whipe-intro`), et sur un site clair un flash sombre serait dur.
 
-     On rebranche ce volet, avec sa couleur et sa courbe : il balaie
-     l'écran vers la gauche en continu — il entre au clic, et repart
-     dans le même sens au chargement de la page suivante.
+     Pour l'ajuster, les deux durées ci-dessous suffisent.
      --------------------------------------------------------- */
-  var VOLET_ENTREE = 620;  // clic -> écran couvert
-  var VOLET_SORTIE = 900;  // page chargée -> écran découvert
+  var FONDU_ENTREE = 850;   // clic -> écran couvert
+  var FONDU_SORTIE = 1100;  // page chargée -> écran découvert
 
   function volet() {
     var v = document.createElement('div');
     v.className = 'volet-transition';
     v.setAttribute('aria-hidden', 'true');
-    v.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0f0f0f;' +
-      'pointer-events:none;transform:translateX(0%);will-change:transform';
+    v.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#fff;' +
+      'pointer-events:none;opacity:1;will-change:opacity';
     document.body.appendChild(v);
 
-    // Au chargement : le volet découvre la page en poursuivant sa course.
+    // Au chargement : le fondu découvre la page.
     // Surtout pas de requestAnimationFrame ici : il ne tourne pas dans un onglet
-    // d'arrière-plan, et le volet resterait sur un écran noir jusqu'au retour du
-    // visiteur. Un timer, lui, tourne toujours.
+    // d'arrière-plan, et le voile resterait en place jusqu'au retour du visiteur.
+    // Un timer, lui, tourne toujours.
     setTimeout(function () {
-      v.style.transition = 'transform ' + (reduce ? 0 : VOLET_SORTIE) + 'ms cubic-bezier(0.455, 0.03, 0.515, 0.955)';
-      v.style.transform = 'translateX(-100%)';
+      v.style.transition = 'opacity ' + (reduce ? 0 : FONDU_SORTIE) + 'ms ease';
+      v.style.opacity = '0';
     }, 0);
 
-    // Filet de sécurité : quoi qu'il arrive, le volet dégage. Mieux vaut une
-    // transition ratée qu'une page noire.
+    // Filet de sécurité : quoi qu'il arrive, le voile dégage. Mieux vaut une
+    // transition ratée qu'une page masquée.
     setTimeout(function () {
       v.style.transition = 'none';
-      v.style.transform = 'translateX(-100%)';
-    }, VOLET_SORTIE + 800);
+      v.style.opacity = '0';
+    }, FONDU_SORTIE + 800);
 
     if (reduce) return;
 
@@ -393,20 +389,16 @@
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
 
       e.preventDefault();
-      // Le volet revient par la droite et couvre l'écran avant de naviguer.
-      v.style.transition = 'none';
-      v.style.transform = 'translateX(100%)';
-      void v.offsetWidth;
-      v.style.transition = 'transform ' + VOLET_ENTREE + 'ms cubic-bezier(0.455, 0.03, 0.515, 0.955)';
-      v.style.transform = 'translateX(0%)';
-      setTimeout(function () { location.href = a.href; }, VOLET_ENTREE);
+      v.style.transition = 'opacity ' + FONDU_ENTREE + 'ms ease';
+      v.style.opacity = '1';
+      setTimeout(function () { location.href = a.href; }, FONDU_ENTREE);
     }, true);
 
-    // Retour arrière depuis le cache : le volet doit être retiré.
+    // Retour arrière depuis le cache : le voile doit être retiré.
     addEventListener('pageshow', function (ev) {
       if (ev.persisted) {
         v.style.transition = 'none';
-        v.style.transform = 'translateX(-100%)';
+        v.style.opacity = '0';
       }
     });
   }

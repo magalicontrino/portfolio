@@ -142,7 +142,10 @@ site fonctionne, au prix d'un écart documenté avec l'original.
 | **2 images** (`arrow.svg`, `MacBook.png`) | Empruntées à d'autres sites Webflow, refusées par leur CDN (403) | Balises retirées : elles ne s'affichaient de toute façon pas |
 | **Contenu de `/web`** | `.wrap-home` porte `display:none` en dur ; l'animation qui le révèle après 500 ms est rejouée — sans elle la page reste **vide sous son titre** | Reprise de l'interaction d'origine |
 | **Hamburger** | L'animation d'origine écarte les barres hors du cadre : il n'en reste qu'une, illisible | Les trois barres se **croisent** : ±45°, la médiane s'efface |
-| **Transition entre pages** | Le script d'une transition en volet est présent mais aucun élément ne porte la classe `transition-trigger` qu'il attend : elle ne s'exécute jamais | Volet rebranché avec le panneau prévu (`.preload-2`, `#0f0f0f`) : il couvre l'écran en 620 ms au clic, puis le découvre en 900 ms au chargement |
+| **Transition entre pages** | Le script d'une transition en volet est présent mais aucun élément ne porte la classe `transition-trigger` qu'il attend : elle ne s'exécute jamais | Un **fondu au blanc** : 850 ms au clic, 1100 ms au chargement. Blanc plutôt que noir — c'est la couleur du volet prévu à l'origine (`.whipe-intro`), et un flash sombre serait dur sur un site clair |
+
+Pour régler la transition, deux constantes en haut de `volet()` dans `app.js` suffisent :
+`FONDU_ENTREE` (clic → écran couvert) et `FONDU_SORTIE` (page chargée → écran découvert).
 | **Ancres vides** (`<a href="#">`) | Webflow s'en sert comme accroche à clic (FAQ, bouton « les tarifs ici », cartes) : suivre l'ancre renvoyait le navigateur **en haut de page** | Navigation neutralisée pour les seuls `href="#"`. Les vraies ancres (`#nav`, retour en haut) fonctionnent toujours |
 
 Le mégamenu mérite un mot. Ses interactions d'ouverture **existent** dans le projet Webflow
