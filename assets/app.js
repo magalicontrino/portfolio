@@ -49,6 +49,9 @@
   // Ramène un élément à son état final : plus de décalage, pleine opacité.
   function settle(el, opts) {
     if (!el) return;
+    // Le voile de transition n'appartient pas à la page : il ne doit jamais
+    // être « remis à l'état final », sinon il recouvre tout.
+    if (el.classList && el.classList.contains('volet-transition')) return;
     var props = { transform: 'translate3d(0px, 0px, 0px)' };
     if (el.style.opacity !== '' && el.style.opacity !== '1') props.opacity = '1';
     // Les préfixes inline d'origine gagneraient sur notre transform.
@@ -143,8 +146,10 @@
 
     // Le reste des éléments encore figés sur leur état de départ.
     var heroSel = HERO.map(function (g) { return g.sel; }).join(', ') + ', .tut-parent, .tut-parent-phone, ' + FROZEN;
+    // Le voile de transition porte lui aussi une opacité en ligne : sans
+    // l'écarter, settle() le rallume à 1 et la page reste blanche pour de bon.
     var pending = $$('[style*="translate3d"], [style*="opacity"]').filter(function (el) {
-      return !el.matches(heroSel) && handled.indexOf(el) === -1;
+      return !el.matches(heroSel) && !el.matches('.volet-transition') && handled.indexOf(el) === -1;
     });
     if (!pending.length) return;
     if (reduce || !('IntersectionObserver' in window)) {
@@ -231,7 +236,10 @@
   function megamenu() {
     var trigger = document.getElementById('open');
     var menu = $('.navmenu');
-    var navbar = $('.navbar-2');
+    // C'est .nav-container qui porte le blanc opaque et recouvre .navbar-2 :
+    // assombrir .navbar-2 seul ne se voit pas, et la croix, passée au blanc,
+    // resterait blanche sur blanc.
+    var navbar = $('.nav-container') || $('.navbar-2');
     var top = $('.hamburger-line-top');
     var mid = $('.hamburger-line-middle');
     var bot = $('.hamburger-line-bottom');
@@ -244,14 +252,21 @@
     if (!trigger || !menu) return;
     var open = false;
 
-    // Les trois barres se rejoignent au centre et se croisent.
-    // L'écart entre le centre d'une barre extrême et celui du milieu vaut
-    // la demi-hauteur des deux (0,15 rem chacune) plus la marge (0,375 rem).
+    // Attention : .nav-button-hamburger porte un rotate(90deg) en CSS. Les
+    // barres paraissent verticales à l'écran mais sont horizontales dans leur
+    // propre repère — c'est bien en Y qu'elles se rejoignent.
+    // Écart mesuré entre deux barres voisines : 10,8 px.
     var VERS_CENTRE = '0.675rem';
+
+    // Ce même conteneur ne fait que 26 px de haut et rogne ce qui déborde. Une
+    // barre de 48 px pivotée à 45° en occupe 37 : sans lever le rognage, la
+    // croix est coupée et il n'en reste qu'une tranche.
+    var boite = trigger.querySelector('.nav-button-hamburger');
 
     function openMenu() {
       open = true;
       document.body.style.overflow = 'hidden';
+      if (boite) boite.style.overflow = 'visible';
       menu.style.display = 'block';
       animate(menu, { opacity: '1' }, { duration: 100, easing: 'ease' });
       animate(top, { transform: 'translateY(' + VERS_CENTRE + ') rotate(45deg)', backgroundColor: BLANC }, { duration: 600, easing: 'outQuart' });
@@ -271,7 +286,13 @@
       animate(mid, { opacity: '1', backgroundColor: NOIR }, { duration: 400, delay: 200, easing: 'ease' });
       if (navbar) animate(navbar, { backgroundColor: BLANC }, { duration: 600, easing: 'ease' });
       trigger.setAttribute('aria-expanded', 'false');
-      setTimeout(function () { if (!open) menu.style.display = 'none'; }, 800);
+      // Le rognage ne revient qu'une fois les barres redressées, sinon on les
+      // verrait se faire couper en cours de route.
+      setTimeout(function () {
+        if (open) return;
+        menu.style.display = 'none';
+        if (boite) boite.style.overflow = '';
+      }, 800);
     }
 
     trigger.setAttribute('aria-expanded', 'false');

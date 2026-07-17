@@ -146,6 +146,15 @@ site fonctionne, au prix d'un écart documenté avec l'original.
 
 Pour régler la transition, deux constantes en haut de `volet()` dans `app.js` suffisent :
 `FONDU_ENTREE` (clic → écran couvert) et `FONDU_SORTIE` (page chargée → écran découvert).
+
+**Trois pièges de cette barre de navigation**, notés pour la prochaine fois :
+`.nav-button-hamburger` porte un `rotate(90deg)` en CSS — les barres paraissent
+verticales mais sont horizontales dans leur propre repère, et se rejoignent donc
+en Y. Ce même conteneur ne fait que 26 px de haut et rogne ce qui déborde : une
+barre de 48 px pivotée à 45° en occupe 37, il faut lever le rognage à l'ouverture.
+Enfin le blanc de la barre est peint par `.nav-container`, pas par `.navbar-2` qui
+est dessous : c'est `.nav-container` qu'il faut assombrir, sinon la croix blanche
+reste blanche sur blanc.
 | **Ancres vides** (`<a href="#">`) | Webflow s'en sert comme accroche à clic (FAQ, bouton « les tarifs ici », cartes) : suivre l'ancre renvoyait le navigateur **en haut de page** | Navigation neutralisée pour les seuls `href="#"`. Les vraies ancres (`#nav`, retour en haut) fonctionnent toujours |
 
 Le mégamenu mérite un mot. Ses interactions d'ouverture **existent** dans le projet Webflow
