@@ -27,6 +27,25 @@ préservent au pixel près la géométrie vérifiée ci-dessous.
 
 **Le site est complet : 21 pages**, soit tout le site Webflow d'origine.
 
+## Ajouter un site à la page `/web`
+
+La liste visible est celle des `.history-item` dans `outils/pages/web.html` (la
+section `.div-cards-web` juste au-dessus est en `display:none`, sur l'original
+comme ici — ne pas s'y tromper). Copier une entrée existante et remplacer le
+titre, l'image et le lien.
+
+**Ajouter en fin de liste** : `.w-dyn-item:nth-child(even)` inverse le sens de
+lecture une ligne sur deux, donc insérer en tête décalerait la mise en page de
+toutes les entrées suivantes.
+
+Les visuels sont des **captures du site**, pas des photos — au format 2880×1506,
+avec les déclinaisons `-p-500`, `-p-800`, `-p-1080`, `-p-1600`, `-p-2000` pour le
+`srcset`. Un visuel ajouté hors CDN Webflow s'écrit `/assets/img/...` dans la
+page source ; le générateur le rend relatif à la profondeur de la page.
+
+Le bouton « voir le projet » ne se met que si une page projet existe dans
+`websites/`. Cava d'Aliga n'en a pas : seul « voir le site » est présent.
+
 ## Régénérer les pages
 
 Les 21 pages sont produites par un script, pas écrites à la main :
@@ -49,6 +68,7 @@ contenu demandés, à ne pas « corriger » en les comparant au site live.
 |---|---|---|
 | `/web` | « Webflow » et son logo retirés du titre | compétences élargies, l'outil n'a plus à être nommé |
 | `/web` | « de site » passé en fin (`.text-span-35`) sur les deux lignes | l'alternance gras/fin devient régulière sur les quatre lignes |
+| `/web` | ajout de **Cava d'Aliga** en fin de liste | nouveau site, ajouté à la demande |
 
 ## Mise en ligne (GitHub Pages)
 

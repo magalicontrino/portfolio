@@ -75,8 +75,16 @@ def build(name, src, outdir, depth):
     # de la visionneuse : on les garde. Le reste du runtime saute.
     body=re.sub(r'<script(?![^>]*application/json).*?</script>','',body,flags=re.S)
 
+    # Les visuels ajoutes apres coup (hors CDN Webflow) s'ecrivent « /assets/... »
+    # dans la page source. On les rend relatifs a la profondeur de la page, comme
+    # tout le reste : le site doit continuer a fonctionner a n'importe quelle racine.
+    def relatif(u):
+        return up+u.lstrip('/') if u.startswith('/assets/') else u
+
     def attr(m):
         a,u=m.group(1),m.group(2)
+        if u.startswith('/assets/'):
+            return f'{a}="{relatif(u)}"'
         if u.startswith('http') and re.search(r'\.(png|jpg|jpeg|svg|webp|gif)(\?|$)',u,re.I):
             v=local(u)
             return f'{a}="{up}assets/{v}"' if v else m.group(0)
@@ -89,7 +97,8 @@ def build(name, src, outdir, depth):
             p=p.strip()
             if not p: continue
             bits=p.split(' ',1); v=local(bits[0])
-            parts.append((up+'assets/'+v if v else bits[0])+((' '+bits[1]) if len(bits)>1 else ''))
+            cible=(up+'assets/'+v) if v else relatif(bits[0])
+            parts.append(cible+((' '+bits[1]) if len(bits)>1 else ''))
         return 'srcset="'+', '.join(parts)+'"'
     body=re.sub(r'srcset="([^"]*)"', srcset, body)
 
