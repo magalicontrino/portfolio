@@ -233,6 +233,14 @@ site fonctionne, au prix d'un écart documenté avec l'original.
 Le bouton « les tarifs ici » ouvre son espace en `BOUTON_OUVRE` (350 ms) et le
 referme en `BOUTON_FERME` (250 ms), dans `flipcards()`.
 
+**Le moteur d'animations de Webflow et `app.js` se disputaient le menu.** Sur les
+pages qui ont un carrousel ou une visionneuse — pages projet et galeries photo —
+`webflow.js` est chargé pour ces deux modules, mais son moteur reconnaît aussi ses
+anciennes cibles au `data-w-id` : il posait sur les barres du hamburger un
+`translate3d(-100%)` qui écrasait la croix. Le générateur retire donc le
+`data-w-id` du menu sur ces pages seulement. `app.js` cible par classe, jamais par
+`data-w-id` ; le carrousel et la visionneuse continuent de fonctionner.
+
 La carte « logo » des pages projet s'ouvre en deux à l'entrée dans le champ
 (`cartesLogo()`, d'après les interactions d'origine « Open Card » a-111 et
 « Close Card » a-114) : le dessus remonte, le dessous descend, et les variantes

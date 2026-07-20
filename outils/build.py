@@ -142,6 +142,16 @@ def build(name, src, outdir, depth):
     # galeries et le carrousel des pages projet. On rejoue le runtime d'origine
     # plutot que de les reecrire.
     needs_wf = ('w-lightbox' in body) or ('w-slider' in body)
+
+    # Sur ces pages, le moteur d'animations de Webflow tourne aussi. Il reconnait
+    # ses cibles au data-w-id et s'empare du menu -- il posait sur les barres du
+    # hamburger un translate3d(-100%) qui ecrasait la croix d'app.js. On lui
+    # retire donc le menu : app.js cible par classe, jamais par data-w-id.
+    if needs_wf:
+        def sans_wid(m):
+            return re.sub(r'\s*data-w-id="[^"]*"', '', m.group(0))
+        body=re.sub(r'<[^>]*class="[^"]*(?:hamburger-line|navmenu|megamenu-innerwrapper)[^"]*"[^>]*>',
+                    sans_wid, body)
     title=re.search(r'<title>(.*?)</title>', h, re.S)
     desc=re.search(r'<meta name="description" content="([^"]*)"', h)
     head=f'''<!DOCTYPE html>
