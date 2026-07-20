@@ -55,6 +55,20 @@ Les visuels d'une page projet : une capture pleine hauteur en 800 px de large
 pour l'écran du MacBook, et trois captures mobiles en 455 px de large pour les
 téléphones (le cadre gris vient du CSS, l'image n'est que le contenu de l'écran).
 
+**Capturer un site qui révèle son contenu au défilement** — c'est le cas de
+Cava d'Aliga, et sans doute de tout site moderne. Une capture directe donne une
+page presque vide : les animations liées au scroll ne se déclenchent jamais. Les
+deux scripts `outils/capture.js` (pleine hauteur) et `outils/capture-mobile.js`
+(un écran de téléphone) parcourent d'abord toute la page pour déclencher les
+révélations, puis photographient. Ils pilotent Chrome par son protocole DevTools :
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
+  --remote-debugging-port=9222 --user-data-dir=/tmp/profil about:blank &
+node outils/capture.js https://exemple.com/ /tmp/ecran.png 1440
+node outils/capture-mobile.js https://exemple.com/ /tmp/tel.png
+```
+
 ## Le favicon
 
 `favicon.ico` à la racine (16/32/48 px, tiré du rond noir d'origine) plus
