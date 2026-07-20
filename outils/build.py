@@ -78,8 +78,13 @@ def build(name, src, outdir, depth):
     # Les visuels ajoutes apres coup (hors CDN Webflow) s'ecrivent « /assets/... »
     # dans la page source. On les rend relatifs a la profondeur de la page, comme
     # tout le reste : le site doit continuer a fonctionner a n'importe quelle racine.
+    #
+    # On leur ajoute aussi l'empreinte de leur contenu. Les visuels du CDN Webflow
+    # ne changent jamais, mais ceux-la sont retouches : sans empreinte, le
+    # navigateur ressert l'ancienne image pendant des jours.
     def relatif(u):
-        return up+u.lstrip('/') if u.startswith('/assets/') else u
+        if not u.startswith('/assets/'): return u
+        return up+u.lstrip('/')+_v(u[len('/assets/'):])
 
     def attr(m):
         a,u=m.group(1),m.group(2)
