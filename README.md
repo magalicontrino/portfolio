@@ -233,6 +233,12 @@ site fonctionne, au prix d'un écart documenté avec l'original.
 Le bouton « les tarifs ici » ouvre son espace en `BOUTON_OUVRE` (350 ms) et le
 referme en `BOUTON_FERME` (250 ms), dans `flipcards()`.
 
+La carte « logo » des pages projet s'ouvre en deux à l'entrée dans le champ
+(`cartesLogo()`, d'après les interactions d'origine « Open Card » a-111 et
+« Close Card » a-114) : le dessus remonte, le dessous descend, et les variantes
+du logo montent en fondu. Le délai d'une seconde avant l'ouverture vient des
+données d'origine — la carte se pose d'abord.
+
 Attention à la table `EASE` : une courbe absente y retombe en `linear` sans le
 moindre avertissement, et le geste paraît lourd. `inOutQuart` et `easeOut` y
 manquaient — vérifier qu'un `easing:` demandé existe bien avant de conclure

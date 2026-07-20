@@ -23,6 +23,10 @@
     outQuart: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
     inOutQuart: 'cubic-bezier(0.77, 0, 0.175, 1)',
     outQuint: 'cubic-bezier(0.23, 1, 0.32, 1)',
+    outSine: 'cubic-bezier(0.39, 0.575, 0.565, 1)',
+    // Le rebond de la carte « logo » : valeurs reprises telles quelles des
+    // données d'origine, le dernier point dépasse 1 — c'est le dépassement.
+    outBack: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
     easeIn: 'cubic-bezier(0.42, 0, 1, 1)',
     easeOut: 'cubic-bezier(0, 0, 0.58, 1)',
     ease: 'ease'
@@ -739,11 +743,67 @@
     });
   }
 
+  /* ---------------------------------------------------------
+     La carte « logo » des pages projet, qui s'ouvre en deux
+
+     Interactions d'origine « Open Card » (a-111) et « Close Card » (a-114) :
+     à l'entrée dans le champ, le dessus remonte, le dessous descend, et le
+     contenu cachée entre les deux — les variantes du logo — remonte en fondu.
+     Tout se déclenche 1 s après l'apparition ; la carte se referme quand on
+     la quitte.
+     --------------------------------------------------------- */
+  function cartesLogo() {
+    $$('.mockup').forEach(function (bloc) {
+      var carte = $('.card', bloc);
+      if (!carte) return;
+      var dessus = $('.card_top', carte);
+      var dessous = $('.card_bottom', carte);
+      var texte = $('.card_bottom-text', carte);
+      var fleche = $('.card_arrow', carte);
+      if (!texte) return;
+
+      // État fermé : le contenu attend, remonté et transparent.
+      function fermer() {
+        animate(carte, { transform: 'translateY(3em)' }, { duration: 500, easing: 'outQuad' });
+        if (dessous) animate(dessous, { transform: 'translateY(0em)' }, { duration: 500, easing: 'outQuad' });
+        if (dessus) animate(dessus, { transform: 'translateY(0em)' }, { duration: 500, easing: 'outQuad' });
+        animate(texte, { opacity: '0' }, { duration: 300, easing: 'ease' });
+        setTimeout(function () { set(texte, { transform: 'translateY(-6em)' }); }, 300);
+        if (fleche) animate(fleche, { transform: 'rotate(0deg)' }, { duration: 500, easing: 'ease' });
+      }
+
+      function ouvrir() {
+        animate(carte, { transform: 'translateY(0em)' }, { duration: 400, easing: 'outSine' });
+        animate(texte, { opacity: '1', transform: 'translateY(0em)' }, { duration: 700, easing: 'outBack' });
+        if (dessous) animate(dessous, { transform: 'translateY(5em)' }, { duration: 700, easing: 'outBack' });
+        if (dessus) animate(dessus, { transform: 'translateY(-5em)' }, { duration: 500, easing: 'outQuad' });
+        if (fleche) animate(fleche, { transform: 'rotate(180deg)' }, { duration: 300, easing: 'ease' });
+      }
+
+      set(texte, { opacity: '0', transform: 'translateY(-6em)' });
+      set(carte, { transform: 'translateY(3em)' });
+
+      if (reduce || !('IntersectionObserver' in window)) { ouvrir(); return; }
+
+      var minuteur = null;
+      new IntersectionObserver(function (entrees) {
+        entrees.forEach(function (e) {
+          clearTimeout(minuteur);
+          // Le délai d'une seconde vient de l'interaction d'origine : la carte
+          // se pose, puis s'ouvre.
+          if (e.isIntersecting) minuteur = setTimeout(ouvrir, 1000);
+          else fermer();
+        });
+      }, { threshold: 0.35 }).observe(bloc);
+    });
+  }
+
   function start() {
     megamenu();
     bigLines();
     tutButtons();
     cardHovers();
+    cartesLogo();
     ancresVides();
     volet();
     contenuDifferé();
