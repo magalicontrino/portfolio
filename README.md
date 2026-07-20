@@ -46,6 +46,17 @@ page source ; le générateur le rend relatif à la profondeur de la page.
 Le bouton « voir le projet » ne se met que si une page projet existe dans
 `websites/`. Cava d'Aliga n'en a pas : seul « voir le site » est présent.
 
+## Le favicon
+
+`favicon.ico` à la racine (16/32/48 px, tiré du rond noir d'origine) plus
+`assets/img/favicon-180.png` pour l'écran d'accueil iOS. Le `.ico` à la racine
+compte : c'est le fichier que les navigateurs réclament d'eux-mêmes, même sans
+déclaration.
+
+Déclaré dans les 21 pages par le générateur, et à la main dans `index.html` et
+`entree/index.html` — ces deux-là ne passent pas par le script. En chemins
+relatifs, comme le reste.
+
 ## Régénérer les pages
 
 Les 21 pages sont produites par un script, pas écrites à la main :
