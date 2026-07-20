@@ -107,6 +107,18 @@ def build(name, src, outdir, depth):
         return 'srcset="'+', '.join(parts)+'"'
     body=re.sub(r'srcset="([^"]*)"', srcset, body)
 
+    # Les visuels poses en CSS dans un attribut style (background-image) echappent
+    # aux deux passes ci-dessus, qui ne regardent que src/href/srcset. Sans ceci
+    # un logo reste en chemin absolu, sans empreinte : il casse des qu'on sert le
+    # site ailleurs qu'a la racine.
+    def fond(m):
+        guillemet=m.group(1) or ''
+        u=m.group(2)
+        v=local(u)
+        cible=(up+'assets/'+v) if v else relatif(u)
+        return f'background-image:url({guillemet}{cible}{guillemet})'
+    body=re.sub(r'background-image:url\((&quot;|\'|")?([^)]+?)\1?\)', fond, body)
+
     # Liens internes -> relatifs. /webdesign renvoie 404 sur le site d'origine : neutralise.
     body=body.replace('https://magalicontrino.webflow.io/','/')
     body=re.sub(r'href="/websites/([\w-]+)"', lambda m: f'href="{up}websites/{m.group(1)}/"', body)
