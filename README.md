@@ -301,6 +301,13 @@ après un déploiement : le site paraît inchangé, ou pire, une page à jour to
 script périmé. L'empreinte change avec le fichier, donc le navigateur recharge exactement
 ce qu'il faut, et seulement ça.
 
+Les **visuels ajoutés hors CDN Webflow** en portent une aussi — ceux écrits
+`/assets/...` dans une page source, comme les captures des pages projet. Eux sont
+retouchés : sans empreinte, une image corrigée reste invisible pendant des jours,
+et on croit la correction perdue alors que le fichier en ligne est déjà le bon.
+Les visuels du CDN n'en ont pas besoin : leur nom contient déjà un identifiant
+unique et ils ne changent jamais.
+
 Ces empreintes sont recalculées à la génération des pages : rien à faire à la main.
 
 ## Comment c'est construit
