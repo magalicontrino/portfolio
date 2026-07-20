@@ -44,7 +44,16 @@ avec les déclinaisons `-p-500`, `-p-800`, `-p-1080`, `-p-1600`, `-p-2000` pour 
 page source ; le générateur le rend relatif à la profondeur de la page.
 
 Le bouton « voir le projet » ne se met que si une page projet existe dans
-`websites/`. Cava d'Aliga n'en a pas : seul « voir le site » est présent.
+`websites/`.
+
+**Créer une page projet** : copier la page source d'un projet voisin
+(`outils/pages/websites_<slug>.html`), y substituer le titre, les technos, le
+lien et les visuels, puis ajouter le slug à la liste `websites` de `build.py`.
+C'est ainsi qu'a été faite `websites_cavadaliga.html`, à partir de Casa Linear.
+
+Les visuels d'une page projet : une capture pleine hauteur en 800 px de large
+pour l'écran du MacBook, et trois captures mobiles en 455 px de large pour les
+téléphones (le cadre gris vient du CSS, l'image n'est que le contenu de l'écran).
 
 ## Le favicon
 
@@ -80,6 +89,7 @@ contenu demandés, à ne pas « corriger » en les comparant au site live.
 | `/web` | « Webflow » et son logo retirés du titre | compétences élargies, l'outil n'a plus à être nommé |
 | `/web` | « de site » passé en fin (`.text-span-35`) sur les deux lignes | l'alternance gras/fin devient régulière sur les quatre lignes |
 | `/web` | ajout de **Cava d'Aliga** en fin de liste | nouveau site, ajouté à la demande |
+| `websites/cavadaliga` | page projet créée de toutes pièces | elle n'existe pas sur le site Webflow d'origine |
 
 ## Mise en ligne (GitHub Pages)
 

@@ -57,7 +57,7 @@ PAGES={
   'web':      ('pages/web.html',   'web',      1),
   'infos':    ('pages/infos.html', 'infos',    1),
 }
-for slug in ('ambassadeurs','casa-linear','celie-yoga','kioskup','loransse-doe'):
+for slug in ('ambassadeurs','casa-linear','cavadaliga','celie-yoga','kioskup','loransse-doe'):
     PAGES[f'websites/{slug}']=(f'pages/websites_{slug}.html', f'websites/{slug}', 2)
 for slug in ('kioskup','noir-et-blanc','la-saison-des-chants','nature','galerie','calais',
              'manif','musique','ambiance','reciproque','en-couleur','studio'):
