@@ -27,7 +27,13 @@ SURCHARGES = '''
    dans ce fichier ne s'ecarte de l'original.
    ========================================================= */
 
-/* (aucune pour l'instant) */
+/* Lien vers le CV, ajoute a la demande : une ampoule blanche dans le meme rond
+   noir que les icones sociales du pied de page. La taille suit celle des autres
+   glyphes (.image-50, .image-51) a chaque palier. */
+.lien-cv { margin-top: 18px; }
+.image-cv { width: 22px; height: 22px; }
+@media (max-width: 991px) { .image-cv { width: 20px; height: 20px; } }
+@media (max-width: 479px) { .image-cv { width: 18px; height: 18px; } }
 '''
 def _appliquer_surcharges():
     import os

@@ -108,6 +108,7 @@ contenu demandés, à ne pas « corriger » en les comparant au site live.
 | `/web` | « de site » passé en fin (`.text-span-35`) sur les deux lignes | l'alternance gras/fin devient régulière sur les quatre lignes |
 | `/web` | ajout de **Cava d'Aliga** en fin de liste | nouveau site, ajouté à la demande |
 | `websites/cavadaliga` | page projet créée de toutes pièces | elle n'existe pas sur le site Webflow d'origine |
+| pied de page | picto **ampoule** vers `cv.magalicontrino.com` | lien vers le CV, ajouté à la demande |
 
 ## Mise en ligne (GitHub Pages)
 
