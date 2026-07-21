@@ -75,6 +75,23 @@ def build(name, src, outdir, depth):
     # de la visionneuse : on les garde. Le reste du runtime saute.
     body=re.sub(r'<script(?![^>]*application/json).*?</script>','',body,flags=re.S)
 
+    # Toute URL du CDN devient locale, en premier et quel qu'en soit le
+    # contexte. Les blocs de donnees de la visionneuse (w-json) sont conserves
+    # tels quels par le filtre des scripts, et leurs URL echappent donc a toutes
+    # les passes ci-dessus -- les galeries allaient chercher Webflow a chaque
+    # ouverture d'une photo en grand.
+    def cdn(m):
+        u=m.group(0)
+        # Certains noms de fichiers contiennent un guillemet, ecrit `&quot;` dans
+        # la page ; la table, elle, garde l'URL telle que le serveur l'attend.
+        v=local(u) or local(u.replace('&quot;','"'))
+        return (up+'assets/'+v) if v else u
+    # On borne l'URL a son extension plutot qu'a un delimiteur : ces noms de
+    # fichiers contiennent des parentheses, des espaces encodes et parfois un
+    # guillemet, si bien qu'aucun caractere de fin n'est fiable.
+    body=re.sub(r'https://cdn\.prod\.website-files\.com/[^"\s>]*?\.(?:jpe?g|png|svg|webp|gif)',
+                cdn, body, flags=re.I)
+
     # Les visuels ajoutes apres coup (hors CDN Webflow) s'ecrivent « /assets/... »
     # dans la page source. On les rend relatifs a la profondeur de la page, comme
     # tout le reste : le site doit continuer a fonctionner a n'importe quelle racine.
@@ -118,6 +135,7 @@ def build(name, src, outdir, depth):
         cible=(up+'assets/'+v) if v else relatif(u)
         return f'background-image:url({guillemet}{cible}{guillemet})'
     body=re.sub(r'background-image:url\((&quot;|\'|")?([^)]+?)\1?\)', fond, body)
+
 
     # Liens internes -> relatifs. /webdesign renvoie 404 sur le site d'origine : neutralise.
     body=body.replace('https://magalicontrino.webflow.io/','/')

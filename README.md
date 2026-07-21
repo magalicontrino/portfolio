@@ -315,6 +315,20 @@ après un déploiement : le site paraît inchangé, ou pire, une page à jour to
 script périmé. L'empreinte change avec le fichier, donc le navigateur recharge exactement
 ce qu'il faut, et seulement ça.
 
+**Le site ne dépend plus d'aucun serveur externe.** Il restait 403 appels au CDN
+de Webflow, tous dans les galeries photo : le générateur les rend désormais
+locaux, quel que soit leur contexte. Trois pièges s'y cachaient, et ils valent
+d'être connus avant de toucher à cette partie :
+
+- les noms de fichiers contiennent des **parenthèses**, des espaces encodés en
+  `%2520`, parfois un **guillemet** écrit `&quot;`. Aucun caractère de fin n'est
+  fiable : l'URL est donc bornée à son extension ;
+- les blocs `w-json` de la visionneuse sont conservés tels quels et échappent aux
+  passes sur `src`/`href`/`srcset` — d'où le balayage global ;
+- ce balayage doit passer **en premier**. Le traitement des `background-image`
+  borne la valeur à la première parenthèse fermante et tronquait ces URL avant
+  qu'on puisse les traiter.
+
 Les **visuels ajoutés hors CDN Webflow** en portent une aussi — ceux écrits
 `/assets/...` dans une page source, comme les captures des pages projet. Eux sont
 retouchés : sans empreinte, une image corrigée reste invisible pendant des jours,
