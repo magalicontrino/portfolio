@@ -71,10 +71,14 @@ node outils/capture-mobile.js https://exemple.com/ /tmp/tel.png
 
 ## Le favicon
 
-`favicon.ico` à la racine (16/32/48 px, tiré du rond noir d'origine) plus
-`assets/img/favicon-180.png` pour l'écran d'accueil iOS. Le `.ico` à la racine
-compte : c'est le fichier que les navigateurs réclament d'eux-mêmes, même sans
-déclaration.
+Des PNG en 16, 32 et 192 px avec leur `type` et leurs `sizes` déclarés — c'est ce
+que les navigateurs modernes préfèrent — plus `favicon.ico` à la racine pour les
+anciens, et `favicon-180.png` pour l'écran d'accueil iOS. Le `.ico` à la racine
+compte même sans déclaration : c'est le fichier que les navigateurs réclament
+d'eux-mêmes.
+
+Tout vient du rond noir d'origine (`655c9591…_256px.jpg`). **À 16 px, ça ne fait
+qu'un point noir** : lisible, mais qui n'identifie pas le site.
 
 Déclaré dans les 21 pages par le générateur, et à la main dans `index.html` et
 `entree/index.html` — ces deux-là ne passent pas par le script. En chemins

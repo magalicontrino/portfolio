@@ -179,8 +179,11 @@ def build(name, src, outdir, depth):
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>{title.group(1).strip() if title else name}</title>
 {f'<meta name="description" content="{desc.group(1)}" />' if desc else ''}
-<link rel="icon" href="{up}favicon.ico" sizes="any" />
-<link rel="apple-touch-icon" href="{up}assets/img/favicon-180.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="{up}assets/img/favicon-32.png{_v('img/favicon-32.png')}" />
+<link rel="icon" type="image/png" sizes="16x16" href="{up}assets/img/favicon-16.png{_v('img/favicon-16.png')}" />
+<link rel="icon" type="image/png" sizes="192x192" href="{up}assets/img/favicon-192.png{_v('img/favicon-192.png')}" />
+<link rel="icon" type="image/x-icon" href="{up}favicon.ico" />
+<link rel="apple-touch-icon" href="{up}assets/img/favicon-180.png{_v('img/favicon-180.png')}" />
 <link rel="stylesheet" href="{up}assets/style.css{VCSS}" />
 </head>
 '''
