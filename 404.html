@@ -3,210 +3,149 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>404 — magalicontrino</title>
+<title>404 &mdash; magalicontrino</title>
 <meta name="robots" content="noindex" />
-<!-- Page servie à l'URL manquante, à n'importe quelle profondeur : les chemins
-     relatifs y casseraient. Tout est donc en absolu — le site est à la racine
-     du domaine. -->
+<!-- Page servie a l'URL manquante, a n'importe quelle profondeur : tout est en
+     chemin absolu, le site etant a la racine du domaine. -->
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<!-- La feuille du site : on reutilise le vrai menu, a l'identique. -->
+<link rel="stylesheet" href="/assets/style.css" />
 <style>
-  @font-face {
-    font-family: 'Unigeo 64 Variable Trial';
-    src: url('/assets/fonts/655c9978f8882e62e8fca303_Unigeo64-Variable-trial.ttf') format('truetype');
-    font-weight: 100 820;
-    font-style: normal;
-    font-display: swap;
-  }
-  :root { --sombre:#1c1a1a; --rose:#e6296f; --rouge:#ff0200; --fond:#f8f8f8; }
+  :root { --rose:#e6296f; --rouge:#ff0200; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; }
   body {
     font-family:'Unigeo 64 Variable Trial', -apple-system, sans-serif;
-    color:var(--sombre);
+    min-height:100vh; overflow:hidden; position:relative; color:#fff;
     display:flex; align-items:center; justify-content:center;
-    min-height:100vh; overflow:hidden; position:relative;
-    /* Ciel de pluie : un dégradé gris-bleu très doux vers le blanc du site, pour
-       que les gouttes claires aient de quoi se détacher. */
     background:
-      radial-gradient(120% 80% at 50% -10%, #d7dde4 0%, #e9ecf0 34%, var(--fond) 72%);
+      linear-gradient(rgba(18,16,16,.60), rgba(18,16,16,.48)),
+      url('/assets/img/655c97be346f4ebef8b1452a_Contrino-3-sur-47.jpg') center/cover no-repeat fixed;
   }
-  /* La pluie couvre tout mais laisse cliquer au travers. */
   #pluie { position:fixed; inset:0; z-index:1; pointer-events:none; }
   .contenu { position:relative; z-index:2; text-align:center; padding:24px;
     display:flex; flex-direction:column; align-items:center; }
-  /* Cette police rend le 0 et le 4 quasi identiques (un cercle barré) : un
-     « 404 » géant y est illisible. On le garde en petite étiquette, où la
-     géométrie n'est plus qu'un ornement, et on donne le premier rôle au
-     message — qui, lui, se lit parfaitement. */
   .code {
     font-weight:300; font-size:15px; letter-spacing:.5em;
-    text-transform:uppercase; color:var(--sombre); opacity:.55;
-    display:inline-flex; align-items:center; margin-bottom:22px; padding-left:.5em;
+    text-transform:uppercase; color:#fff; opacity:.85;
+    display:inline-flex; align-items:center; padding-left:.5em;
   }
   .code .pt { width:6px; height:6px; background:var(--rouge); margin-left:.7em; }
-  .msg {
-    font-weight:200; font-variation-settings:'wght' 200;
-    font-size:clamp(34px, 6.4vw, 72px); line-height:1.04; max-width:12em;
-  }
-  .msg .pt-rose { color:var(--rose); }
   .retour {
-    display:inline-flex; align-items:center; gap:.6em; margin-top:44px;
-    padding:14px 28px; border:1px solid var(--sombre); border-radius:8px;
+    display:inline-flex; align-items:center; gap:.6em; margin-top:38px;
+    padding:14px 28px; border:1px solid rgba(255,255,255,.85); border-radius:8px;
     font-weight:300; font-size:18px; text-transform:uppercase; letter-spacing:.08em;
-    color:var(--sombre); text-decoration:none; background:rgba(248,248,248,.55);
+    color:#fff; text-decoration:none; background:rgba(255,255,255,.06);
     -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
     transition:background .3s ease, color .3s ease;
   }
-  .retour:hover { background:var(--sombre); color:#fff; }
+  .retour:hover { background:#fff; color:#1c1a1a; }
   .retour .fleche { font-size:1.1em; line-height:1; }
+  .navbar-2, .nav-container { background:transparent !important; }
+  .nav-left { visibility:hidden; }
+  .hamburger-line-top, .hamburger-line-middle, .hamburger-line-bottom { background:#fff !important; }
+  .volet-transition { background:#121010 !important; }
   @media (prefers-reduced-motion: reduce) { .retour { transition:none; } }
 </style>
 </head>
 <body>
 
+<div id="nav" class="nav"><nav id="navbar" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4988" class="navbar-2"><div class="padding-global-2"><main id="menu" class="nav-container"><div class="nav-left"><a href="https://magalicontrino.com/" class="nav-logo-link w-inline-block"><div class="div-block"><img src="/assets/img/655c973029d174cb0804ca62_Frame-197.png" loading="lazy" sizes="100vw" srcset="/assets/img/655c973029d174cb0804ca62_Frame-20197-p-500.png 500w, /assets/img/655c973029d174cb0804ca62_Frame-20197-p-800.png 800w, /assets/img/655c973029d174cb0804ca62_Frame-20197-p-1080.png 1080w, /assets/img/655c973029d174cb0804ca62_Frame-197.png 1873w" alt="site home" class="image-22"/></div></a></div><a id="open" href="#" class="w-inline-block"><div class="nav-right"><div fs-scrolldisable-element="toggle" class="nav-button-hamburger"><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4994" class="hamburger-line-top"></div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4995" class="hamburger-line-middle"></div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4996" class="hamburger-line-bottom"></div></div></div></a></main></div></nav><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4997" class="navmenu"><div class="padding-global-2"><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4999" class="megamenu-innerwrapper"><div class="container-large-2"><div class="margin-top-3 margin-xxhuge"><div class="megamenu-wrapper"><div class="megamenu-left"><a href="/accueil/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b499e" class="navlink w-inline-block"></a><a href="/photo/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b499f" class="navlink w-inline-block"><div class="heading-style-h1-3 text-color-white">Photographie pro</div></a><a href="/photo/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49a2" class="navlink w-inline-block"><div class="heading-style-h1-3 text-color-white">Photographie perso</div></a><a href="/web/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49a5" class="navlink w-inline-block"><div class="heading-style-h1-3 text-color-white">Webdesign</div></a></div><div class="menu-right"><div class="social-wrapper"></div></div><div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49ab" class="tut-parent"><a href="mailto:magalicontrino@hotmail.fr" target="_blank" class="tut-inner w-inline-block"><img src="/assets/img/655c973029d174cb0804ca60_-.png" loading="lazy" alt="mail" class="image-25"/></a></div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49ae" class="tut-parent"><a href="https://www.facebook.com/contrino.mag" target="_blank" class="tut-inner w-inline-block"><img src="/assets/img/655c973029d174cb0804ca5c_XMLID_11_.png" loading="lazy" alt="facebook" class="image-24"/></a></div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49b1" class="tut-parent"><a href="https://www.instagram.com/magalicontrino/" target="_blank" class="tut-inner w-inline-block"><img src="/assets/img/655c973029d174cb0804ca5e_Frame-206.png" loading="lazy" alt="insta" class="image-23"/></a></div></div></div></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49b5" href="/accueil/" aria-current="page" class="contact-big w-inline-block w--current"><div class="text-big is--thin">Home</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49b9" href="/accueil/" aria-current="page" class="contact-big-mobile w-inline-block w--current"><div class="text-big is--thin">Home</div></a><div class="line-big-mobile"></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49be" href="/photo/" class="contact-big w-inline-block"><div class="text-big is--thin">Photos</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49c2" href="/photo/" class="contact-big-mobile w-inline-block"><div class="text-big is--thin">Photos</div></a><div class="line-big-mobile"></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49c7" href="/web/" class="contact-big w-inline-block"><div class="text-big is--thin">Web</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49cb" href="/web/" class="contact-big-mobile w-inline-block"><div class="text-big is--thin">Web</div></a><div class="line-big-mobile"></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49d0" href="/infos/" class="contact-big w-inline-block"><div class="text-big is--thin">Services</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49d4" href="/infos/" class="contact-big-mobile w-inline-block"><div class="text-big is--thin">Services</div></a><div class="line-big-mobile"></div></div></div></div></div></div>
+
+<div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4997" class="navmenu"><div class="padding-global-2"><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b4999" class="megamenu-innerwrapper"><div class="container-large-2"><div class="margin-top-3 margin-xxhuge"><div class="megamenu-wrapper"><div class="megamenu-left"><a href="/accueil/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b499e" class="navlink w-inline-block"></a><a href="/photo/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b499f" class="navlink w-inline-block"><div class="heading-style-h1-3 text-color-white">Photographie pro</div></a><a href="/photo/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49a2" class="navlink w-inline-block"><div class="heading-style-h1-3 text-color-white">Photographie perso</div></a><a href="/web/" data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49a5" class="navlink w-inline-block"><div class="heading-style-h1-3 text-color-white">Webdesign</div></a></div><div class="menu-right"><div class="social-wrapper"></div></div><div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49ab" class="tut-parent"><a href="mailto:magalicontrino@hotmail.fr" target="_blank" class="tut-inner w-inline-block"><img src="/assets/img/655c973029d174cb0804ca60_-.png" loading="lazy" alt="mail" class="image-25"/></a></div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49ae" class="tut-parent"><a href="https://www.facebook.com/contrino.mag" target="_blank" class="tut-inner w-inline-block"><img src="/assets/img/655c973029d174cb0804ca5c_XMLID_11_.png" loading="lazy" alt="facebook" class="image-24"/></a></div><div data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49b1" class="tut-parent"><a href="https://www.instagram.com/magalicontrino/" target="_blank" class="tut-inner w-inline-block"><img src="/assets/img/655c973029d174cb0804ca5e_Frame-206.png" loading="lazy" alt="insta" class="image-23"/></a></div></div></div></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49b5" href="/accueil/" aria-current="page" class="contact-big w-inline-block w--current"><div class="text-big is--thin">Home</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49b9" href="/accueil/" aria-current="page" class="contact-big-mobile w-inline-block w--current"><div class="text-big is--thin">Home</div></a><div class="line-big-mobile"></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49be" href="/photo/" class="contact-big w-inline-block"><div class="text-big is--thin">Photos</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49c2" href="/photo/" class="contact-big-mobile w-inline-block"><div class="text-big is--thin">Photos</div></a><div class="line-big-mobile"></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49c7" href="/web/" class="contact-big w-inline-block"><div class="text-big is--thin">Web</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49cb" href="/web/" class="contact-big-mobile w-inline-block"><div class="text-big is--thin">Web</div></a><div class="line-big-mobile"></div></div><div class="grid-item text"><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49d0" href="/infos/" class="contact-big w-inline-block"><div class="text-big is--thin">Services</div></a><div class="line-big"></div><a data-w-id="7d902cd6-30e8-1cc2-a7fd-4150382b49d4" href="/infos/" class="contact-big-mobile w-inline-block"><div class="text-big is--thin">Services</div></a><div class="line-big-mobile"></div></div></div></div></div>
+
 <canvas id="pluie" aria-hidden="true"></canvas>
 
 <main class="contenu">
   <div class="code">erreur quatre&#8209;cent&#8209;quatre<span class="pt" aria-hidden="true"></span></div>
-  <p class="msg">cette page a filé<br>sous la pluie<span class="pt-rose">.</span></p>
-  <a class="retour" href="/accueil/"><span class="fleche">&larr;</span> retour à l'accueil</a>
+  <a class="retour" href="/accueil/"><span class="fleche">&larr;</span> retour a l'accueil</a>
 </main>
 
 <script>
-/* =========================================================
-   Pluie sur une vitre — canvas 2D, sans aucune dépendance.
-
-   Inspiré de l'effet Droplets de Canvas UI, mais réécrit de zéro : l'original
-   est un shader WebGL empaqueté en React, incompatible avec ce site autonome.
-   Ici, des gouttes-lentilles posées sur la vitre ; de temps en temps l'une
-   grossit et se met à glisser, absorbant celles qu'elle croise et laissant une
-   traînée mouillée.
-   ========================================================= */
+/* Pluie sur une vitre — canvas 2D, sans dependance. Densifiee a la demande. */
 (function () {
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cv = document.getElementById('pluie');
   var ctx = cv.getContext('2d');
   var dpr = Math.min(devicePixelRatio || 1, 2);
   var L, H;
-
   function dim() {
     L = innerWidth; H = innerHeight;
     cv.width = L * dpr; cv.height = H * dpr;
     cv.style.width = L + 'px'; cv.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
-  dim();
-  addEventListener('resize', dim);
-
-  // Une goutte : position, rayon, et sa vitesse de chute si elle coule.
-  var gouttes = [];
-  var traces = []; // perles laissées derrière une goutte qui coule
-
+  dim(); addEventListener('resize', dim);
+  var gouttes = [], traces = [];
   function poserStatiques(n) {
-    for (var i = 0; i < n; i++) {
-      gouttes.push({ x: Math.random() * L, y: Math.random() * H,
-                     r: 1.4 + Math.random() * 4, vy: 0, coule: false });
-    }
+    for (var i = 0; i < n; i++)
+      gouttes.push({ x: Math.random()*L, y: Math.random()*H,
+                     r: 1.4 + Math.random()*4, vy: 0, coule: false });
   }
-  poserStatiques(Math.round(L * H / 2400));
-  // Quelques coulures déjà en route, pour qu'il pleuve dès l'ouverture.
-  for (var q = 0; q < Math.max(3, L / 260); q++) {
-    gouttes.push({ x: Math.random() * L, y: Math.random() * H, r: 5 + Math.random() * 3,
-                   vy: 1 + Math.random() * 2, coule: true });
-  }
-
-  // Dessine une goutte comme une perle de verre : une ombre portée qui la
-  // décolle de la vitre, un corps qui s'assombrit sur les bords (la réfraction),
-  // et un éclat de lumière en haut à gauche.
+  poserStatiques(Math.round(L * H / 1600));
+  for (var q = 0; q < Math.max(6, L / 130); q++)
+    gouttes.push({ x: Math.random()*L, y: Math.random()*H, r: 5 + Math.random()*3.5,
+                   vy: 1.5 + Math.random()*2.5, coule: true });
   function dessiner(g) {
     var r = g.r;
-    // ombre portée, décalée vers le bas
-    ctx.beginPath();
-    ctx.arc(g.x + r * 0.12, g.y + r * 0.42, r * 0.96, 0, 6.2832);
-    ctx.fillStyle = 'rgba(40,44,52,0.16)';
-    ctx.fill();
-    // corps réfractant
-    var grad = ctx.createRadialGradient(g.x - r * 0.32, g.y - r * 0.36, r * 0.05,
-                                        g.x, g.y, r);
-    grad.addColorStop(0,    'rgba(255,255,255,0.72)');
-    grad.addColorStop(0.35, 'rgba(228,233,240,0.30)');
-    grad.addColorStop(0.72, 'rgba(150,158,170,0.16)');
-    grad.addColorStop(0.93, 'rgba(90,96,108,0.30)');
-    grad.addColorStop(1,    'rgba(52,56,66,0.55)');
-    ctx.beginPath();
-    ctx.arc(g.x, g.y, r, 0, 6.2832);
-    ctx.fillStyle = grad;
-    ctx.fill();
-    // éclat spéculaire
+    ctx.beginPath(); ctx.arc(g.x + r*0.12, g.y + r*0.42, r*0.96, 0, 6.2832);
+    ctx.fillStyle = 'rgba(10,10,12,0.22)'; ctx.fill();
+    var grad = ctx.createRadialGradient(g.x - r*0.32, g.y - r*0.36, r*0.05, g.x, g.y, r);
+    grad.addColorStop(0,'rgba(255,255,255,0.78)');
+    grad.addColorStop(0.35,'rgba(228,233,240,0.34)');
+    grad.addColorStop(0.72,'rgba(150,158,170,0.18)');
+    grad.addColorStop(0.93,'rgba(70,74,84,0.34)');
+    grad.addColorStop(1,'rgba(30,32,40,0.60)');
+    ctx.beginPath(); ctx.arc(g.x, g.y, r, 0, 6.2832); ctx.fillStyle = grad; ctx.fill();
     if (r > 1.4) {
-      ctx.beginPath();
-      ctx.arc(g.x - r * 0.36, g.y - r * 0.38, r * 0.24, 0, 6.2832);
-      ctx.fillStyle = 'rgba(255,255,255,0.9)';
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(g.x - r*0.36, g.y - r*0.38, r*0.24, 0, 6.2832);
+      ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.fill();
     }
   }
-
   var dernier = 0;
   function boucle(t) {
-    var dt = Math.min((t - dernier) || 16, 40) / 16;
-    dernier = t;
+    var dt = Math.min((t - dernier) || 16, 40) / 16; dernier = t;
     ctx.clearRect(0, 0, L, H);
-
-    // On fait grossir puis couler quelques grosses gouttes.
     for (var i = 0; i < gouttes.length; i++) {
       var g = gouttes[i];
       if (!g.coule) {
-        // grossit très lentement ; passé un seuil, elle se met à couler
-        g.r += 0.0016 * dt * (0.5 + Math.random());
-        if (g.r > 4 && Math.random() < 0.006 * dt) g.coule = true;
+        g.r += 0.0018 * dt * (0.5 + Math.random());
+        if (g.r > 3.6 && Math.random() < 0.010 * dt) g.coule = true;
       } else {
-        g.vy += 0.05 * dt;                 // gravité
-        g.y += g.vy * dt;
-        g.x += Math.sin(g.y * 0.05) * 0.4; // léger frétillement
-        // laisse une perle de temps en temps
-        if (Math.random() < 0.4) traces.push({ x: g.x + (Math.random() - 0.5) * g.r,
-                                               y: g.y - g.r, r: g.r * (0.18 + Math.random() * 0.22), a: 1 });
-        g.r -= 0.02 * dt;                  // s'amenuise en coulant
-        // absorbe les statiques croisées
+        g.vy += 0.06 * dt; g.y += g.vy * dt; g.x += Math.sin(g.y*0.05)*0.45;
+        if (Math.random() < 0.5) traces.push({ x: g.x+(Math.random()-0.5)*g.r,
+                                               y: g.y-g.r, r: g.r*(0.18+Math.random()*0.22), a: 1 });
+        g.r -= 0.02 * dt;
         for (var j = 0; j < gouttes.length; j++) {
-          var s = gouttes[j];
-          if (s === g || s.coule) continue;
-          var dx = s.x - g.x, dy = s.y - g.y;
-          if (dx * dx + dy * dy < (g.r + s.r) * (g.r + s.r)) {
-            g.r = Math.min(9, Math.sqrt(g.r * g.r + s.r * s.r));
-            s.x = Math.random() * L; s.y = Math.random() * H; s.r = 0.7 + Math.random() * 1.5;
+          var sdr = gouttes[j];
+          if (sdr === g || sdr.coule) continue;
+          var dx = sdr.x-g.x, dy = sdr.y-g.y;
+          if (dx*dx + dy*dy < (g.r+sdr.r)*(g.r+sdr.r)) {
+            g.r = Math.min(9, Math.sqrt(g.r*g.r + sdr.r*sdr.r));
+            sdr.x = Math.random()*L; sdr.y = Math.random()*H; sdr.r = 1.4 + Math.random()*1.5;
           }
         }
-        if (g.y - g.r > H || g.r < 1) {    // sortie ou tarie -> renaît en haut
-          g.x = Math.random() * L; g.y = -10; g.r = 0.7 + Math.random() * 2.2;
-          g.vy = 0; g.coule = false;
+        if (g.y - g.r > H || g.r < 1) {
+          g.x = Math.random()*L; g.y = -10; g.r = 1.4 + Math.random()*3;
+          g.vy = 1 + Math.random(); g.coule = true;
         }
       }
       dessiner(g);
     }
-
-    // Les traces s'estompent.
-    for (var k = traces.length - 1; k >= 0; k--) {
-      var tr = traces[k];
-      tr.a -= 0.012 * dt;
-      if (tr.a <= 0) { traces.splice(k, 1); continue; }
-      ctx.beginPath();
-      ctx.arc(tr.x, tr.y, tr.r, 0, 6.2832);
-      ctx.fillStyle = 'rgba(150,155,165,' + (tr.a * 0.22) + ')';
-      ctx.fill();
+    for (var k = traces.length-1; k >= 0; k--) {
+      var tr = traces[k]; tr.a -= 0.012 * dt;
+      if (tr.a <= 0) { traces.splice(k,1); continue; }
+      ctx.beginPath(); ctx.arc(tr.x, tr.y, tr.r, 0, 6.2832);
+      ctx.fillStyle = 'rgba(210,214,222,' + (tr.a*0.28) + ')'; ctx.fill();
     }
-
     requestAnimationFrame(boucle);
   }
-
-  if (reduce) {
-    // Mouvement réduit : une vitre parsemée de gouttes, figée.
-    gouttes.forEach(function (g) { g.r = 0.7 + Math.random() * 3; dessiner(g); });
-  } else {
-    requestAnimationFrame(boucle);
-  }
+  if (reduce) gouttes.forEach(function (g) { g.r = 1.4 + Math.random()*3.5; dessiner(g); });
+  else requestAnimationFrame(boucle);
 })();
 </script>
+<!-- Le moteur du site : c'est lui qui anime le menu (hamburger -> croix). -->
+<script src="/assets/app.js"></script>
 </body>
 </html>
