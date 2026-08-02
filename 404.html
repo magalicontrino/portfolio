@@ -5,48 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>404 &mdash; magalicontrino</title>
 <meta name="robots" content="noindex" />
-<!-- Page servie a l'URL manquante, a n'importe quelle profondeur : tout est en
-     chemin absolu, le site etant a la racine du domaine. -->
+<!-- Servie a l'URL manquante, a n'importe quelle profondeur : chemins absolus. -->
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 <!-- La feuille du site : on reutilise le vrai menu, a l'identique. -->
 <link rel="stylesheet" href="/assets/style.css" />
 <style>
-  :root { --rose:#e6296f; --rouge:#ff0200; }
+  :root { --rouge:#ff0200; }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; }
   body {
     font-family:'Unigeo 64 Variable Trial', -apple-system, sans-serif;
     min-height:100vh; overflow:hidden; position:relative; color:#fff;
     display:flex; align-items:center; justify-content:center;
+    /* La photo de l'oncle au cigare, voilee de sombre. La pluie claire y ressort. */
     background:
-      linear-gradient(rgba(18,16,16,.60), rgba(18,16,16,.48)),
+      linear-gradient(rgba(18,16,16,.58), rgba(18,16,16,.46)),
       url('/assets/img/655c97be346f4ebef8b1452a_Contrino-3-sur-47.jpg') center/cover no-repeat fixed;
   }
   #pluie { position:fixed; inset:0; z-index:1; pointer-events:none; }
-  .contenu { position:relative; z-index:2; text-align:center; padding:24px;
-    display:flex; flex-direction:column; align-items:center; }
+  .contenu {
+    position:relative; z-index:2; text-align:center; padding:24px;
+    display:flex; flex-direction:column; align-items:center; gap:30px;
+  }
   .code {
-    font-weight:300; font-size:15px; letter-spacing:.5em;
-    text-transform:uppercase; color:#fff; opacity:.85;
+    font-weight:300; font-size:14px; letter-spacing:.5em;
+    text-transform:uppercase; color:#fff; opacity:.72;
     display:inline-flex; align-items:center; padding-left:.5em;
   }
-  .code .pt { width:6px; height:6px; background:var(--rouge); margin-left:.7em; }
+  .code .pt { width:5px; height:5px; background:var(--rouge); margin-left:.7em; }
+  /* Juste une fleche pour repartir. */
   .retour {
-    display:inline-flex; align-items:center; gap:.6em; margin-top:38px;
-    padding:14px 28px; border:1px solid rgba(255,255,255,.85); border-radius:8px;
-    font-weight:300; font-size:18px; text-transform:uppercase; letter-spacing:.08em;
-    color:#fff; text-decoration:none; background:rgba(255,255,255,.06);
-    -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
-    transition:background .3s ease, color .3s ease;
+    display:inline-flex; align-items:center; justify-content:center;
+    width:60px; height:60px; border-radius:50%;
+    border:1px solid rgba(255,255,255,.5); color:#fff; text-decoration:none;
+    transition:background .35s ease, border-color .35s ease;
   }
-  .retour:hover { background:#fff; color:#1c1a1a; }
-  .retour .fleche { font-size:1.1em; line-height:1; }
-  .navbar-2, .nav-container { background:transparent !important; }
-  .nav-left { visibility:hidden; }
+  .retour svg { width:24px; height:24px; display:block; transition:transform .35s ease; }
+  .retour:hover { background:rgba(255,255,255,.12); border-color:#fff; }
+  .retour:hover svg { transform:translateX(-4px); }
+  /* Le menu, adapte a cette page sombre : la barre du site est blanche avec un
+     logo et une croix sombres — invisibles ici. On rend la barre transparente
+     (avec un leger voile sombre pour la lisibilite), le logo blanc, et le
+     hamburger/croix blanc. On voit « Magali », et la croix reste blanche. */
+  .navbar-2 { background:linear-gradient(rgba(16,14,14,.78), rgba(16,14,14,0)) !important; }
+  .nav-container { background:transparent !important; }
+  .nav-logo-link .image-22 { filter:brightness(0) invert(1); }   /* logo blanc */
   .hamburger-line-top, .hamburger-line-middle, .hamburger-line-bottom { background:#fff !important; }
+  /* Voile de transition d'app.js : blanc par defaut, assombri ici pour eviter
+     un flash blanc a l'arrivee. */
   .volet-transition { background:#121010 !important; }
-  @media (prefers-reduced-motion: reduce) { .retour { transition:none; } }
+  @media (prefers-reduced-motion: reduce) { .retour, .retour svg { transition:none; } }
 </style>
 </head>
 <body>
@@ -59,11 +68,17 @@
 
 <main class="contenu">
   <div class="code">erreur quatre&#8209;cent&#8209;quatre<span class="pt" aria-hidden="true"></span></div>
-  <a class="retour" href="/accueil/"><span class="fleche">&larr;</span> retour a l'accueil</a>
+  <a class="retour" href="/accueil/" title="Retour a l'accueil" aria-label="Retour a l'accueil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="20" y1="12" x2="4" y2="12"/><polyline points="10 6 4 12 10 18"/>
+    </svg>
+  </a>
 </main>
 
 <script>
-/* Pluie sur une vitre — canvas 2D, sans dependance. Densifiee a la demande. */
+/* Fin d'averse : quelques gouttes qui s'etirent et degoulinent lentement sur la
+   vitre, comme s'il restait de la pluie apres l'ondee. Canvas 2D, sans dependance. */
 (function () {
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cv = document.getElementById('pluie');
@@ -77,71 +92,73 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   dim(); addEventListener('resize', dim);
+
   var gouttes = [], traces = [];
-  function poserStatiques(n) {
-    for (var i = 0; i < n; i++)
-      gouttes.push({ x: Math.random()*L, y: Math.random()*H,
-                     r: 1.4 + Math.random()*4, vy: 0, coule: false });
+  function residuelle() {
+    return { x: Math.random()*L, y: Math.random()*H, r: 0.8+Math.random()*2.4, vy:0, len:0, coule:false };
   }
-  poserStatiques(Math.round(L * H / 1600));
-  for (var q = 0; q < Math.max(6, L / 130); q++)
-    gouttes.push({ x: Math.random()*L, y: Math.random()*H, r: 5 + Math.random()*3.5,
-                   vy: 1.5 + Math.random()*2.5, coule: true });
+  function coulure(y) {
+    return { x: Math.random()*L, y: (y==null? Math.random()*H : y),
+             r: 3.5+Math.random()*3, vy: 0.1+Math.random()*0.2, len:0, coule:true };
+  }
+  var STATIQUES = Math.round(L*H/3800), COULURES = Math.max(5, Math.round(L/150));
+  for (var i=0;i<STATIQUES;i++) gouttes.push(residuelle());
+  for (var c=0;c<COULURES;c++) gouttes.push(coulure());
+
+  function tete(x,y,r) {
+    ctx.beginPath(); ctx.arc(x+r*0.12, y+r*0.4, r*0.95, 0, 6.2832);
+    ctx.fillStyle='rgba(8,8,10,0.22)'; ctx.fill();
+    var g=ctx.createRadialGradient(x-r*0.32,y-r*0.36,r*0.05,x,y,r);
+    g.addColorStop(0,'rgba(255,255,255,0.80)'); g.addColorStop(0.35,'rgba(226,231,238,0.34)');
+    g.addColorStop(0.72,'rgba(150,158,170,0.18)'); g.addColorStop(0.93,'rgba(64,68,78,0.34)');
+    g.addColorStop(1,'rgba(26,28,36,0.60)');
+    ctx.beginPath(); ctx.arc(x,y,r,0,6.2832); ctx.fillStyle=g; ctx.fill();
+    if (r>1.2){ ctx.beginPath(); ctx.arc(x-r*0.36,y-r*0.38,r*0.24,0,6.2832);
+      ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.fill(); }
+  }
   function dessiner(g) {
-    var r = g.r;
-    ctx.beginPath(); ctx.arc(g.x + r*0.12, g.y + r*0.42, r*0.96, 0, 6.2832);
-    ctx.fillStyle = 'rgba(10,10,12,0.22)'; ctx.fill();
-    var grad = ctx.createRadialGradient(g.x - r*0.32, g.y - r*0.36, r*0.05, g.x, g.y, r);
-    grad.addColorStop(0,'rgba(255,255,255,0.78)');
-    grad.addColorStop(0.35,'rgba(228,233,240,0.34)');
-    grad.addColorStop(0.72,'rgba(150,158,170,0.18)');
-    grad.addColorStop(0.93,'rgba(70,74,84,0.34)');
-    grad.addColorStop(1,'rgba(30,32,40,0.60)');
-    ctx.beginPath(); ctx.arc(g.x, g.y, r, 0, 6.2832); ctx.fillStyle = grad; ctx.fill();
-    if (r > 1.4) {
-      ctx.beginPath(); ctx.arc(g.x - r*0.36, g.y - r*0.38, r*0.24, 0, 6.2832);
-      ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.fill();
+    if (g.coule && g.len>1) {
+      var lg=ctx.createLinearGradient(g.x,g.y-g.len,g.x,g.y);
+      lg.addColorStop(0,'rgba(210,216,224,0)'); lg.addColorStop(1,'rgba(220,225,233,0.28)');
+      ctx.strokeStyle=lg; ctx.lineCap='round'; ctx.lineWidth=g.r*0.9;
+      ctx.beginPath(); ctx.moveTo(g.x,g.y-g.len); ctx.lineTo(g.x,g.y); ctx.stroke();
     }
+    tete(g.x,g.y,g.r);
   }
-  var dernier = 0;
+  var dernier=0;
   function boucle(t) {
-    var dt = Math.min((t - dernier) || 16, 40) / 16; dernier = t;
-    ctx.clearRect(0, 0, L, H);
-    for (var i = 0; i < gouttes.length; i++) {
-      var g = gouttes[i];
-      if (!g.coule) {
-        g.r += 0.0018 * dt * (0.5 + Math.random());
-        if (g.r > 3.6 && Math.random() < 0.010 * dt) g.coule = true;
+    var dt=Math.min((t-dernier)||16,40)/16; dernier=t;
+    ctx.clearRect(0,0,L,H);
+    for (var i=0;i<gouttes.length;i++) {
+      var g=gouttes[i];
+      if (g.coule) {
+        // Pluie franche mais mesuree : des coulures visibles, sans le deluge.
+        g.vy += 0.012*dt; if (g.vy>3.2) g.vy=3.2;
+        g.y += g.vy*dt; g.x += Math.sin(g.y*0.05)*0.2;
+        g.len += (Math.min(g.vy*20,78)-g.len)*0.1*dt;
+        if (Math.random()<0.09*dt) traces.push({ x:g.x+(Math.random()-0.5)*g.r, y:g.y-g.r,
+                                                  r:g.r*(0.24+Math.random()*0.2), a:1 });
+        for (var j=0;j<gouttes.length;j++) {
+          var s=gouttes[j]; if (s===g||s.coule) continue;
+          var dx=s.x-g.x, dy=s.y-g.y;
+          if (dx*dx+dy*dy < (g.r+s.r)*(g.r+s.r)) { g.r=Math.min(8,Math.sqrt(g.r*g.r+s.r*s.r)); Object.assign(s,residuelle()); }
+        }
+        if (g.y-g.len > H+20) Object.assign(g,coulure(-20));
       } else {
-        g.vy += 0.06 * dt; g.y += g.vy * dt; g.x += Math.sin(g.y*0.05)*0.45;
-        if (Math.random() < 0.5) traces.push({ x: g.x+(Math.random()-0.5)*g.r,
-                                               y: g.y-g.r, r: g.r*(0.18+Math.random()*0.22), a: 1 });
-        g.r -= 0.02 * dt;
-        for (var j = 0; j < gouttes.length; j++) {
-          var sdr = gouttes[j];
-          if (sdr === g || sdr.coule) continue;
-          var dx = sdr.x-g.x, dy = sdr.y-g.y;
-          if (dx*dx + dy*dy < (g.r+sdr.r)*(g.r+sdr.r)) {
-            g.r = Math.min(9, Math.sqrt(g.r*g.r + sdr.r*sdr.r));
-            sdr.x = Math.random()*L; sdr.y = Math.random()*H; sdr.r = 1.4 + Math.random()*1.5;
-          }
-        }
-        if (g.y - g.r > H || g.r < 1) {
-          g.x = Math.random()*L; g.y = -10; g.r = 1.4 + Math.random()*3;
-          g.vy = 1 + Math.random(); g.coule = true;
-        }
+        g.r += 0.003*dt*(0.4+Math.random());
+        if (g.r>2.8 && Math.random()<0.02*dt) { g.coule=true; g.vy=0.4+Math.random()*0.6; }
       }
       dessiner(g);
     }
-    for (var k = traces.length-1; k >= 0; k--) {
-      var tr = traces[k]; tr.a -= 0.012 * dt;
-      if (tr.a <= 0) { traces.splice(k,1); continue; }
-      ctx.beginPath(); ctx.arc(tr.x, tr.y, tr.r, 0, 6.2832);
-      ctx.fillStyle = 'rgba(210,214,222,' + (tr.a*0.28) + ')'; ctx.fill();
+    for (var k=traces.length-1;k>=0;k--) {
+      var tr=traces[k]; tr.a -= 0.006*dt;
+      if (tr.a<=0){ traces.splice(k,1); continue; }
+      ctx.beginPath(); ctx.arc(tr.x,tr.y,tr.r,0,6.2832);
+      ctx.fillStyle='rgba(206,212,220,'+(tr.a*0.26)+')'; ctx.fill();
     }
     requestAnimationFrame(boucle);
   }
-  if (reduce) gouttes.forEach(function (g) { g.r = 1.4 + Math.random()*3.5; dessiner(g); });
+  if (reduce) gouttes.forEach(function(g){ g.coule=false; g.len=0; dessiner(g); });
   else requestAnimationFrame(boucle);
 })();
 </script>

@@ -34,6 +34,12 @@ SURCHARGES = '''
 .image-cv { width: 22px; height: 22px; }
 @media (max-width: 991px) { .image-cv { width: 20px; height: 20px; } }
 @media (max-width: 479px) { .image-cv { width: 18px; height: 18px; } }
+
+/* Lien discret vers la page 404 (la pluie), ajoute a la demande, dans le pied de
+   page a cote du copyright. */
+.lien-404 { color:inherit; text-decoration:none; opacity:.5; padding-left:.4em; transition:opacity .25s ease;
+  font-family:ui-monospace, 'SF Mono', Menlo, monospace; font-size:.9em; letter-spacing:.08em; }
+.lien-404:hover { opacity:1; }
 '''
 def _appliquer_surcharges():
     import os
