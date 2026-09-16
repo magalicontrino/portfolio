@@ -7439,8 +7439,11 @@ h6 {
 .lien-404:hover { opacity:1; }
 
 /* Outils dev ajoutes a la demande (Claude Code, OpenCode, GitHub, Supabase) :
-   logos monochromes officiels, meme gabarit que la rangee existante. La rangee
-   passe a la ligne, sinon huit logos deborderaient sur mobile. */
-.div-block-213 { flex-wrap: wrap; }
-.image-121.outil { width: 46px; }
+   logos monochromes officiels, en 2e rangee. Dimensionnes pour que les 4 tiennent
+   sur UNE ligne meme dans une carte etroite de telephone -- sinon ils debordaient
+   et poussaient le texte hors du cadre. Taille et ecart reduits par palier. */
+.div-block-213 { flex-wrap: wrap; column-gap: 16px; row-gap: 10px; }
 .div-block-213.outils-dev { margin-top: 6px; }
+.image-121, .image-121.outil { width: 52px !important; max-width: 52px !important; margin-bottom: 0 !important; }
+@media (max-width: 767px) { .div-block-213 { column-gap: 12px; } .image-121, .image-121.outil { width: 42px !important; max-width: 42px !important; } }
+@media (max-width: 479px) { .div-block-213 { column-gap: 9px; } .image-121, .image-121.outil { width: 34px !important; max-width: 34px !important; } }
